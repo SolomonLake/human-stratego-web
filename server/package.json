@@ -1,0 +1,12 @@
+{
+  "name": "human-stratego-web",
+  "version": "1.0.0",
+  "description": "",
+  "main": "",
+  "author": "Lake Giffen-Hunter, thanks to Marco Stagni",
+  "license": "MIT",
+  "dependencies": {
+    "socket.io": "^4.2.0",
+    "underscore": "^1.13.1"
+  }
+}
