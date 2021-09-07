@@ -1,4 +1,7 @@
 {
   "private": true,
-  "workspaces": ["server", "app"]
+  "workspaces": [
+    "server",
+    "client"
+  ]
 }

@@ -1,12 +1,12 @@
 import express from "express";
+import path from "path";
 
 const app = express();
 
-app.get("/", (req, res) => {
-  console.log("Hello world received a request.");
+app.use(express.static(path.join(__dirname, "/../../client/build")));
 
-  const target = process.env.TARGET || "World";
-  res.send(`Hello ${target}!`);
+app.get("/", function (req, res) {
+  res.sendFile(path.join(__dirname, "/../../client/build/index.html"));
 });
 
 const port = process.env.PORT || 8080;
