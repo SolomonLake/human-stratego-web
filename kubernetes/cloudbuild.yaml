@@ -1,0 +1,212 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    autopilot.gke.io/resource-adjustment: >-
+      {"input":{"containers":[{"name":"humanstrategoweb-app"}]},"output":{"containers":[{"limits":{"cpu":"500m","ephemeral-storage":"1Gi","memory":"2Gi"},"requests":{"cpu":"500m","ephemeral-storage":"1Gi","memory":"2Gi"},"name":"humanstrategoweb-app"}]},"modified":true}
+  managedFields:
+    - apiVersion: apps/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        "f:metadata":
+          "f:annotations": {}
+        "f:spec":
+          "f:progressDeadlineSeconds": {}
+          "f:replicas": {}
+          "f:revisionHistoryLimit": {}
+          "f:selector": {}
+          "f:strategy":
+            "f:rollingUpdate":
+              .: {}
+              "f:maxSurge": {}
+              "f:maxUnavailable": {}
+            "f:type": {}
+          "f:template":
+            "f:metadata":
+              "f:labels":
+                .: {}
+                "f:app": {}
+            "f:spec":
+              "f:containers":
+                'k:{"name":"humanstrategoweb-app"}':
+                  .: {}
+                  "f:env":
+                    .: {}
+                    'k:{"name":"PORT"}':
+                      .: {}
+                      "f:name": {}
+                      "f:value": {}
+                  "f:imagePullPolicy": {}
+                  "f:name": {}
+                  "f:ports":
+                    .: {}
+                    'k:{"containerPort":8080,"protocol":"TCP"}':
+                      .: {}
+                      "f:containerPort": {}
+                      "f:protocol": {}
+                  "f:resources": {}
+                  "f:terminationMessagePath": {}
+                  "f:terminationMessagePolicy": {}
+              "f:dnsPolicy": {}
+              "f:restartPolicy": {}
+              "f:schedulerName": {}
+              "f:securityContext": {}
+              "f:terminationGracePeriodSeconds": {}
+      manager: kubectl
+      operation: Update
+      time: "2021-09-06T21:13:56Z"
+    - apiVersion: apps/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        "f:metadata":
+          "f:annotations":
+            "f:kubectl.kubernetes.io/last-applied-configuration": {}
+        "f:spec":
+          "f:template":
+            "f:spec":
+              "f:containers":
+                'k:{"name":"humanstrategoweb-app"}':
+                  "f:image": {}
+      manager: kubectl-client-side-apply
+      operation: Update
+      time: "2021-09-10T15:58:07Z"
+    - apiVersion: apps/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        "f:metadata":
+          "f:annotations":
+            "f:deployment.kubernetes.io/revision": {}
+        "f:status":
+          "f:availableReplicas": {}
+          "f:conditions":
+            .: {}
+            'k:{"type":"Available"}':
+              .: {}
+              "f:lastTransitionTime": {}
+              "f:lastUpdateTime": {}
+              "f:message": {}
+              "f:reason": {}
+              "f:status": {}
+              "f:type": {}
+            'k:{"type":"Progressing"}':
+              .: {}
+              "f:lastTransitionTime": {}
+              "f:lastUpdateTime": {}
+              "f:message": {}
+              "f:reason": {}
+              "f:status": {}
+              "f:type": {}
+          "f:observedGeneration": {}
+          "f:readyReplicas": {}
+          "f:replicas": {}
+          "f:updatedReplicas": {}
+      manager: kube-controller-manager
+      operation: Update
+      time: "2021-09-10T15:59:33Z"
+  name: humanstrategoweb-gke
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: humanstrategoweb
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: humanstrategoweb
+    spec:
+      containers:
+        - env:
+            - name: PORT
+              value: "8080"
+          image: gcr.io/human-stratego-web/github.com/solomonlake/human-stratego-web
+          imagePullPolicy: Always
+          name: humanstrategoweb-app
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          resources:
+            limits:
+              cpu: 500m
+              ephemeral-storage: 1Gi
+              memory: 2Gi
+            requests:
+              cpu: 500m
+              ephemeral-storage: 1Gi
+              memory: 2Gi
+          securityContext:
+            capabilities:
+              drop:
+                - NET_RAW
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    cloud.google.com/neg: '{"ingress":true}'
+  finalizers:
+    - service.kubernetes.io/load-balancer-cleanup
+  managedFields:
+    - apiVersion: v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        "f:metadata":
+          "f:annotations":
+            .: {}
+            "f:kubectl.kubernetes.io/last-applied-configuration": {}
+        "f:spec":
+          "f:externalTrafficPolicy": {}
+          "f:loadBalancerIP": {}
+          "f:ports":
+            .: {}
+            'k:{"port":80,"protocol":"TCP"}':
+              .: {}
+              "f:port": {}
+              "f:protocol": {}
+              "f:targetPort": {}
+          "f:selector":
+            .: {}
+            "f:app": {}
+          "f:sessionAffinity": {}
+          "f:type": {}
+      manager: kubectl
+      operation: Update
+      time: "2021-09-06T21:21:23Z"
+    - apiVersion: v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        "f:metadata":
+          "f:finalizers":
+            .: {}
+            'v:"service.kubernetes.io/load-balancer-cleanup"': {}
+        "f:status":
+          "f:loadBalancer":
+            "f:ingress": {}
+      manager: kube-controller-manager
+      operation: Update
+      time: "2021-09-06T21:21:58Z"
+  name: humanstrategoweb
+  namespace: default
+spec:
+  clusterIP: 10.67.2.248
+  clusterIPs:
+    - 10.67.2.248
+  externalTrafficPolicy: Cluster
+  loadBalancerIP: 34.66.93.190
+  ports:
+    - nodePort: 32759
+      port: 80
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: humanstrategoweb
+  sessionAffinity: None
+  type: LoadBalancer
