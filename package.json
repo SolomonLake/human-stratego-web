@@ -3,5 +3,9 @@
   "workspaces": [
     "server",
     "client"
-  ]
+  ],
+  "scripts": {
+    "start-server": "yarn --cwd server start",
+    "start-client": "yarn --cwd client start"
+  }
 }
