@@ -17,6 +17,7 @@ spec:
         - name: humanstrategoweb-app
           image: us-central1-docker.pkg.dev/human-stratego-web/human-stratego-web-artifacts/humanstrategoweb-gke:latest
           # This app listens on port 8080 for web traffic by default.
+          imagePullPolicy: "Always"
           ports:
             - containerPort: 8080
           env:

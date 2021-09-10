@@ -3,5 +3,11 @@
   "workspaces": [
     "server",
     "client"
-  ]
+  ],
+  "scripts": {
+    "submit": "gcloud builds submit --tag us-central1-docker.pkg.dev/human-stratego-web/human-stratego-web-artifacts/humanstrategoweb-gke .",
+    "deploy": "kubectl set image deployment/humanstrategoweb-gke humanstrategoweb-app=us-central1-docker.pkg.dev/human-stratego-web/human-stratego-web-artifacts/humanstrategoweb-gke:latest",
+    "apply": "kubectl apply -f deployment.yaml",
+    "apply-service": "kubectl apply -f service.yaml"
+  }
 }
