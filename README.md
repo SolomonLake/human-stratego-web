@@ -1,5 +1,10 @@
 # Summary
 
+## TODO
+
+- simple babylonjs 3d with player
+- sync players to server with ws
+
 ## Deployment
 
 Server deployment based off this kubernetes quickstart: https://cloud.google.com/kubernetes-engine/docs/quickstarts/deploying-a-language-specific-app

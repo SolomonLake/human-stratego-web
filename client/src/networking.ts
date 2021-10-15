@@ -9,7 +9,7 @@ const connectedPromise = new Promise<void>((resolve) => {
 });
 
 const processGameUpdate = (update: any) => {
-  console.log("update: ", update);
+  // console.log("update: ", update);
 };
 
 const connect = () =>
