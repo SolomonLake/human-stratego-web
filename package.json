@@ -6,6 +6,7 @@
   ],
   "scripts": {
     "start-server": "yarn --cwd server start",
-    "start-client": "yarn --cwd client start"
+    "start-client": "yarn --cwd client start",
+    "types:check": "yarn --cwd client types:check && yarn --cwd server types:check"
   }
 }
