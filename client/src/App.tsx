@@ -9,29 +9,23 @@ import {
   Mesh,
 } from "@babylonjs/core";
 
-let box: Mesh | undefined;
-
 const onSceneReady = (scene: Scene) => {
   // This creates and positions a free camera (non-mesh)
-  var camera = new FreeCamera("camera1", new Vector3(0, 5, -10), scene);
-
+  const camera = new FreeCamera("camera1", new Vector3(0, 5, -10), scene);
   // This targets the camera to scene origin
   camera.setTarget(Vector3.Zero());
 
   const canvas = scene.getEngine().getRenderingCanvas();
-
   // This attaches the camera to the canvas
   camera.attachControl(canvas, true);
 
   // This creates a light, aiming 0,1,0 - to the sky (non-mesh)
-  var light = new HemisphericLight("light", new Vector3(0, 1, 0), scene);
-
+  const light = new HemisphericLight("light", new Vector3(0, 1, 0), scene);
   // Default intensity is 1. Let's dim the light a small amount
   light.intensity = 0.7;
 
   // Our built-in 'box' shape.
-  box = MeshBuilder.CreateBox("box", { size: 2 }, scene);
-
+  const box = MeshBuilder.CreateBox("box", { size: 2 }, scene);
   // Move the box upward 1/2 its height
   box.position.y = 1;
 
@@ -43,7 +37,8 @@ const onSceneReady = (scene: Scene) => {
  * Will run on every frame render.  We are spinning the box on y-axis.
  */
 const onRender = (scene: Scene) => {
-  if (box !== undefined) {
+  const box = scene.getMeshByName("box");
+  if (box) {
     var deltaTimeInMillis = scene.getEngine().getDeltaTime();
 
     const rpm = 10;
@@ -51,34 +46,28 @@ const onRender = (scene: Scene) => {
   }
 };
 
+const ANTIALIAS = true;
+const ENGINE_OPTIONS = undefined;
+const ADAPT_TO_DEVICE_RATIO = false;
+
+const SCENE_OPTIONS = undefined;
+
 export const App = () => {
-  const reactCanvas = useRef(null);
-  const antialias = true;
-
-  const engineOptions = undefined;
-  const adaptToDeviceRatio = undefined;
-
-  const sceneOptions = undefined;
+  const canvasRef = useRef(null);
 
   useEffect(() => {
-    if (reactCanvas.current) {
+    if (canvasRef.current) {
       const engine = new Engine(
-        reactCanvas.current,
-        antialias,
-        engineOptions,
-        adaptToDeviceRatio
+        canvasRef.current,
+        ANTIALIAS,
+        ENGINE_OPTIONS,
+        ADAPT_TO_DEVICE_RATIO
       );
-      const scene = new Scene(engine, sceneOptions);
-      if (scene.isReady()) {
-        onSceneReady(scene);
-      } else {
-        scene.onReadyObservable.addOnce((scene) => onSceneReady(scene));
-      }
+      const scene = new Scene(engine, SCENE_OPTIONS);
+      scene.onReadyObservable.addOnce((scene) => onSceneReady(scene));
 
       engine.runRenderLoop(() => {
-        if (typeof onRender === "function") {
-          onRender(scene);
-        }
+        onRender(scene);
         scene.render();
       });
 
@@ -98,19 +87,15 @@ export const App = () => {
         }
       };
     }
-  }, [reactCanvas]);
+  }, [canvasRef]);
 
   return (
     <canvas
-      ref={reactCanvas}
+      ref={canvasRef}
       id="my-canvas"
       style={{ position: "absolute", height: "100%", width: "100%" }}
     />
   );
 };
-
-fetch("/api/hey").then(async (response) => {
-  console.log(await response.json());
-});
 
 export default App;
