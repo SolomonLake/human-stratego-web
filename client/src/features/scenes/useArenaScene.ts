@@ -1,6 +1,7 @@
 import { Engine, Nullable, Scene } from "@babylonjs/core";
 import { useEffect } from "react";
-import { setUpArenaLevel, onArenaLevelRender } from "../levels/arena";
+import { onSetUpArenaLevel } from "../levels/onSetUpArenaLevel";
+import { onRenderArenaLevel } from "../levels/onRenderArenaLevel";
 import { setUpAvatar } from "../players/avatar";
 
 const ANTIALIAS = true;
@@ -24,12 +25,12 @@ export const useArenaScene = (
       );
       const scene = new Scene(engine, SCENE_OPTIONS);
       scene.onReadyObservable.addOnce((scene) => {
-        setUpArenaLevel(scene);
+        onSetUpArenaLevel(scene);
         setUpAvatar(scene);
       });
 
       engine.runRenderLoop(() => {
-        onArenaLevelRender(scene);
+        onRenderArenaLevel(scene);
         scene.render();
       });
 
