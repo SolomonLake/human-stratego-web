@@ -5,12 +5,15 @@ import {
   StandardMaterial,
   Vector3,
 } from "@babylonjs/core";
+import { createContext } from "react";
 
 const ABSOLUTE_ROTATION = 0;
 const HEIGHT = 0.3;
 const MESH = null;
 const ROTATION_SPEED = 0.01;
 const WALK_SPEED = 0.007;
+
+export const avatarState = { mesh: null };
 
 export const setUpAvatar = (scene: Scene) => {
   const mesh = MeshBuilder.CreateBox(

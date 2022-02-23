@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { onSetUpArenaLevel } from "../levels/onSetUpArenaLevel";
 import { onRenderArenaLevel } from "../levels/onRenderArenaLevel";
 import { setUpAvatar } from "../players/avatar";
+import { dispatch } from "../../App";
 
 const ANTIALIAS = true;
 const ENGINE_OPTIONS = undefined;
@@ -40,6 +41,9 @@ export const useArenaScene = (
 
       if (window) {
         window.addEventListener("resize", resize);
+        window.addEventListener("keydown", () => {
+          dispatch({ type: "increment" });
+        });
       }
 
       return () => {
