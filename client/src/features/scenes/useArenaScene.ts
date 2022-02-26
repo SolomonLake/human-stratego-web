@@ -1,29 +1,20 @@
-import { Engine, Nullable, Scene } from "@babylonjs/core";
+import { Engine, Scene } from "@babylonjs/core";
 import { useEffect } from "react";
 import { onSetUpArenaLevel } from "../levels/onSetUpArenaLevel";
 import { onRenderArenaLevel } from "../levels/onRenderArenaLevel";
 import { setUpAvatar } from "../players/avatar";
-import { dispatch } from "../../App";
-
-const ANTIALIAS = true;
-const ENGINE_OPTIONS = undefined;
-const ADAPT_TO_DEVICE_RATIO = false;
+import { appDispatch } from "../../App";
 
 const SCENE_OPTIONS = undefined;
 
-export const useArenaScene = (
-  canvasRef: React.MutableRefObject<
-    Nullable<WebGLRenderingContext | HTMLCanvasElement>
-  >
-) => {
+export const useArenaScene = (engine: Engine | null) => {
   useEffect(() => {
-    if (canvasRef.current) {
-      const engine = new Engine(
-        canvasRef.current,
-        ANTIALIAS,
-        ENGINE_OPTIONS,
-        ADAPT_TO_DEVICE_RATIO
-      );
+    const increment = () => {
+      appDispatch({ type: "increment" });
+    };
+    window.addEventListener("keydown", increment);
+
+    if (engine) {
       const scene = new Scene(engine, SCENE_OPTIONS);
       scene.onReadyObservable.addOnce((scene) => {
         onSetUpArenaLevel(scene);
@@ -34,25 +25,11 @@ export const useArenaScene = (
         onRenderArenaLevel(scene);
         scene.render();
       });
-
-      const resize = () => {
-        scene.getEngine().resize();
-      };
-
-      if (window) {
-        window.addEventListener("resize", resize);
-        window.addEventListener("keydown", () => {
-          dispatch({ type: "increment" });
-        });
-      }
-
-      return () => {
-        scene.getEngine().dispose();
-
-        if (window) {
-          window.removeEventListener("resize", resize);
-        }
-      };
     }
-  }, [canvasRef]);
+    return () => {
+      if (window) {
+        window.removeEventListener("keydown", increment);
+      }
+    };
+  }, [engine]);
 };
