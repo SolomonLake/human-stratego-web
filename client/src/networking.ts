@@ -24,6 +24,5 @@ const updateDirection = (keyCode: string) => {
 };
 
 window.addEventListener("keydown", (ev) => {
-  console.log("keydown", ev);
   updateDirection(ev.code);
 });
