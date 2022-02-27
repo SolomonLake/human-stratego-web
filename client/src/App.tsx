@@ -1,6 +1,7 @@
-import { Engine, Vector3 } from "@babylonjs/core";
-import { useEffect, useRef, useState } from "react";
-import { useArenaScene } from "./features/scenes/useArenaScene";
+import { Color3, Mesh, Vector3 } from "@babylonjs/core";
+import { Engine, Scene, useEngine } from "react-babylonjs";
+import { useLayoutEffect, useRef } from "react";
+import { AvatarCamera } from "./features/avatar/AvatarCamera";
 
 export let state: State = {
   count: 0,
@@ -66,27 +67,45 @@ function reducer(state: State, action: Action): State {
   }
 }
 
-const ANTIALIAS = true;
-const ENGINE_OPTIONS = undefined;
-const ADAPT_TO_DEVICE_RATIO = false;
+const ABSOLUTE_ROTATION = 0;
+export const AVATAR_HEIGHT = 0.3;
+const MESH = null;
+const ROTATION_SPEED = 0.01;
+const WALK_SPEED = 0.007;
+
+const CAMERA_DISTANCE = 1.5;
 
 export const App = () => {
-  const canvasRef = useRef(null);
+  const engine = useEngine();
 
-  const [engine, setEngine] = useState<Engine | null>(null);
+  // useEffect(() => {
+  //   const keyToInputMap: { [key: string]: Input } = {
+  //     w: "forward",
+  //     s: "backward",
+  //     a: "left",
+  //     d: "right",
+  //   };
+  //   const onKeydown = (event: KeyboardEvent) => {
+  //     const input = keyToInputMap[event.key];
+  //     if (input) {
+  //       appDispatch({ type: "inputActivated", input });
+  //     }
+  //   };
+  //   window.addEventListener("keydown", onKeydown);
+  //   const onKeyup = (event: KeyboardEvent) => {
+  //     const input = keyToInputMap[event.key];
+  //     if (input) {
+  //       appDispatch({ type: "inputDeactivated", input });
+  //     }
+  //   };
+  //   window.addEventListener("keyup", onKeyup);
+  //   return () => {
+  //     window.removeEventListener("keydown", onKeydown);
+  //     window.removeEventListener("keyup", onKeyup);
+  //   };
+  // });
 
-  useEffect(() => {
-    if (!engine) {
-      setEngine(
-        new Engine(
-          canvasRef.current,
-          ANTIALIAS,
-          ENGINE_OPTIONS,
-          ADAPT_TO_DEVICE_RATIO
-        )
-      );
-    }
-
+  useLayoutEffect(() => {
     const onResize = () => {
       if (engine) {
         engine.resize();
@@ -94,45 +113,39 @@ export const App = () => {
     };
     window.addEventListener("resize", onResize);
 
-    const keyToInputMap: { [key: string]: Input } = {
-      w: "forward",
-      s: "backward",
-      a: "left",
-      d: "right",
-    };
-    const onKeydown = (event: KeyboardEvent) => {
-      const input = keyToInputMap[event.key];
-      if (input) {
-        appDispatch({ type: "inputActivated", input });
-      }
-    };
-    window.addEventListener("keydown", onKeydown);
-    const onKeyup = (event: KeyboardEvent) => {
-      const input = keyToInputMap[event.key];
-      if (input) {
-        appDispatch({ type: "inputDeactivated", input });
-      }
-    };
-    window.addEventListener("keyup", onKeyup);
-
     return () => {
-      if (engine) {
-        engine.dispose();
-      }
-
       window.removeEventListener("resize", onResize);
-      window.removeEventListener("keydown", onKeydown);
-      window.removeEventListener("keyup", onKeyup);
     };
-  }, [canvasRef, ANTIALIAS, ENGINE_OPTIONS, ADAPT_TO_DEVICE_RATIO]);
+  }, [engine]);
 
-  useArenaScene(engine);
+  const avatarRef = useRef<Mesh | null>(null);
 
   return (
-    <canvas
-      ref={canvasRef}
-      id="my-canvas"
-      style={{ position: "absolute", height: "100%", width: "100%" }}
-    />
+    <Engine
+      adaptToDeviceRatio={false}
+      antialias
+      engineOptions={undefined}
+      canvasId="babylon-canvas"
+    >
+      <Scene key="arena-scene">
+        <AvatarCamera avatarRef={avatarRef} />
+        <hemisphericLight
+          name="light1"
+          direction={Vector3.Up()}
+          intensity={0.7}
+        />
+        <ground name="ground" height={6} width={6} position={Vector3.Zero()} />
+        <box
+          name="avatar"
+          ref={avatarRef}
+          height={AVATAR_HEIGHT}
+          width={0.1}
+          depth={0.1}
+          position={new Vector3(0, AVATAR_HEIGHT / 2, 0)}
+        >
+          <standardMaterial name="matAvatar" diffuseColor={Color3.Green()} />
+        </box>
+      </Scene>
+    </Engine>
   );
 };
