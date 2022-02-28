@@ -16,7 +16,8 @@ export type State = {
     };
   };
 };
-type Input = keyof State["temp"]["activeInputs"];
+export type Inputs = State["temp"]["activeInputs"];
+type Input = keyof Inputs;
 
 type Action =
   | { type: "inputActivated"; input: Input }
@@ -44,8 +45,6 @@ function reducer(state: State, action: Action): State {
 }
 
 export const AVATAR_HEIGHT = 0.3;
-const MESH = null;
-const ROTATION_SPEED = 0.01;
 
 const CAMERA_DISTANCE = 1.5;
 
@@ -110,11 +109,7 @@ export const App = () => {
           intensity={0.7}
         />
         <ground name="ground" height={6} width={6} position={Vector3.Zero()} />
-        <Avatar
-          avatarRef={avatarRef}
-          activeInputUp={state.temp.activeInputs.up}
-          avatarAbsoluteRotation={state.avatar.absoluteRotation}
-        />
+        <Avatar avatarRef={avatarRef} activeInputs={state.temp.activeInputs} />
       </Scene>
     </Engine>
   );
