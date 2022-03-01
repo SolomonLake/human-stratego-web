@@ -1,3 +1,4 @@
+import { Vector3 } from "@babylonjs/core";
 import io from "socket.io-client";
 
 const socket = io(`ws://${window.location.host}`);
@@ -18,6 +19,13 @@ const connect = () =>
   });
 
 connect();
+
+export const updateAvatarPosition = ({ position }: { position: Vector3 }) => {
+  socket.emit("player_move", {
+    userId: "hello",
+    position: { x: position.x, y: position.y, z: position.z },
+  });
+};
 
 const updateDirection = (keyCode: string) => {
   socket.emit("input", keyCode);

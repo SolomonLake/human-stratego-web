@@ -30,11 +30,24 @@ io.on("connection", (socket: Socket) => {
   socket.on("disconnect", () => {
     console.log("disconnect");
   });
+  socket.on(
+    "player_move",
+    ({
+      userId,
+      position,
+    }: {
+      userId: string;
+      position: { x: number; y: number; z: number };
+    }) => {
+      console.log("userId", userId);
+      console.log("position", position);
+    }
+  );
 
   socket.emit("game_update", { ms: Date.now() });
 
   setInterval(() => {
     console.log("interval!");
     socket.emit("game_update", { ms: Date.now() });
-  }, 1000);
+  }, 5000);
 });

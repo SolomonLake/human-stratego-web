@@ -1,8 +1,9 @@
 import { Color3, Mesh, Vector3 } from "@babylonjs/core";
 import { Engine, Scene } from "react-babylonjs";
 import { useEffect, useReducer, useRef } from "react";
-import { AvatarCamera } from "./features/avatar/AvatarCamera";
+import { Avatar } from "./features/avatar/Avatar";
 import { ResizeEngine } from "./features/resize/ResizeEngine";
+import { Players } from "./features/players/Players";
 
 export const App = () => {
   const framesPerSecond = 60;
@@ -21,7 +22,6 @@ export const App = () => {
         gravity-y={gravity / framesPerSecond}
         collisionsEnabled
       >
-        <AvatarCamera />
         <hemisphericLight
           name="light1"
           direction={Vector3.Up()}
@@ -30,10 +30,12 @@ export const App = () => {
         <ground
           name="ground"
           checkCollisions
-          height={6}
-          width={6}
+          height={20}
+          width={20}
           position={Vector3.Zero()}
         />
+        <Avatar />
+        <Players />
       </Scene>
     </Engine>
   );
