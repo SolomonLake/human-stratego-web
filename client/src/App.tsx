@@ -3,7 +3,6 @@ import { Engine, Scene } from "react-babylonjs";
 import { useEffect, useReducer, useRef } from "react";
 import { AvatarCamera } from "./features/avatar/AvatarCamera";
 import { ResizeEngine } from "./features/resize/ResizeEngine";
-import { Avatar } from "./features/avatar/Avatar";
 
 export type State = {
   avatar: { absoluteRotation: number; mesh: { position: Vector3 } };
@@ -44,15 +43,11 @@ function reducer(state: State, action: Action): State {
   }
 }
 
-export const AVATAR_HEIGHT = 0.3;
-
-const CAMERA_DISTANCE = 1.5;
-
 export const App = () => {
   const [state, dispatch] = useReducer(reducer, {
     avatar: {
       absoluteRotation: 0,
-      mesh: { position: new Vector3(0, AVATAR_HEIGHT / 2, 0) },
+      mesh: { position: new Vector3(0, 0, 0) },
     },
     temp: {
       activeInputs: {
@@ -64,34 +59,8 @@ export const App = () => {
     },
   });
 
-  useEffect(() => {
-    const keyToInputMap: { [key: string]: Input } = {
-      w: "up",
-      s: "down",
-      a: "left",
-      d: "right",
-    };
-    const onKeydown = (event: KeyboardEvent) => {
-      const input = keyToInputMap[event.key];
-      if (input) {
-        dispatch({ type: "inputActivated", input });
-      }
-    };
-    window.addEventListener("keydown", onKeydown);
-    const onKeyup = (event: KeyboardEvent) => {
-      const input = keyToInputMap[event.key];
-      if (input) {
-        dispatch({ type: "inputDeactivated", input });
-      }
-    };
-    window.addEventListener("keyup", onKeyup);
-    return () => {
-      window.removeEventListener("keydown", onKeydown);
-      window.removeEventListener("keyup", onKeyup);
-    };
-  });
-
-  const avatarRef = useRef<Mesh | null>(null);
+  const framesPerSecond = 60;
+  const gravity = -9.81;
 
   return (
     <Engine
@@ -101,15 +70,24 @@ export const App = () => {
       canvasId="babylon-canvas"
     >
       <ResizeEngine />
-      <Scene key="arena-scene">
-        <AvatarCamera avatarRef={avatarRef} />
+      <Scene
+        key="arena-scene"
+        gravity-y={gravity / framesPerSecond}
+        collisionsEnabled
+      >
+        <AvatarCamera />
         <hemisphericLight
           name="light1"
           direction={Vector3.Up()}
           intensity={0.7}
         />
-        <ground name="ground" height={6} width={6} position={Vector3.Zero()} />
-        <Avatar avatarRef={avatarRef} activeInputs={state.temp.activeInputs} />
+        <ground
+          name="ground"
+          checkCollisions
+          height={6}
+          width={6}
+          position={Vector3.Zero()}
+        />
       </Scene>
     </Engine>
   );
