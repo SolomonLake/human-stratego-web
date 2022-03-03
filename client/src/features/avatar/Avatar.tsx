@@ -1,12 +1,15 @@
 import { FreeCamera, Vector3 } from "@babylonjs/core";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useBeforeRender, useEngine, useScene } from "react-babylonjs";
-import { updateAvatarPosition } from "../../networking";
+import { v4 as uuidv4 } from "uuid";
+import { useEmitPlayerMove } from "../players/useEmitPlayerMove";
 
 export const AVATAR_HEIGHT = 1;
 export const AVATAR_WIDTH = AVATAR_HEIGHT * 0.33;
 
 const CAMERA_POSITION = new Vector3(0, AVATAR_HEIGHT, 0);
+
+const userId = uuidv4();
 
 export const Avatar = ({}: {}) => {
   const engine = useEngine();
@@ -15,6 +18,8 @@ export const Avatar = ({}: {}) => {
   const [cameraPosition, setCameraPosition] = useState(
     new Vector3().copyFrom(CAMERA_POSITION)
   );
+
+  const emitPlayerMove = useEmitPlayerMove();
 
   useEffect(() => {
     const canvas = engine?.getRenderingCanvas();
@@ -37,7 +42,10 @@ export const Avatar = ({}: {}) => {
       const { position } = camera;
       if (!position.equals(cameraPosition)) {
         setCameraPosition(new Vector3().copyFrom(position));
-        updateAvatarPosition({ position });
+        emitPlayerMove({
+          userId: userId,
+          position: { x: position.x, y: position.y, z: position.z },
+        });
       }
     }
   });

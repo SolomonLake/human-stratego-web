@@ -32,15 +32,13 @@ io.on("connection", (socket: Socket) => {
   });
   socket.on(
     "player_move",
-    ({
-      userId,
-      position,
-    }: {
+    (data: {
       userId: string;
       position: { x: number; y: number; z: number };
     }) => {
-      console.log("userId", userId);
-      console.log("position", position);
+      console.log("userId", data.userId);
+      console.log("position", data.position);
+      socket.broadcast.emit("player_move", data);
     }
   );
 

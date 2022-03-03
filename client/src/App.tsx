@@ -4,6 +4,9 @@ import { useEffect, useReducer, useRef } from "react";
 import { Avatar } from "./features/avatar/Avatar";
 import { ResizeEngine } from "./features/resize/ResizeEngine";
 import { Players } from "./features/players/Players";
+import { SocketProvider } from "./features/sockets/SocketProvider";
+import { SocketContext } from "./features/sockets/SocketContext";
+import { io } from "socket.io-client";
 
 export const App = () => {
   const framesPerSecond = 60;
@@ -22,20 +25,24 @@ export const App = () => {
         gravity-y={gravity / framesPerSecond}
         collisionsEnabled
       >
-        <hemisphericLight
-          name="light1"
-          direction={Vector3.Up()}
-          intensity={0.7}
-        />
-        <ground
-          name="ground"
-          checkCollisions
-          height={20}
-          width={20}
-          position={Vector3.Zero()}
-        />
-        <Avatar />
-        <Players />
+        <SocketProvider>
+          <>
+            <hemisphericLight
+              name="light1"
+              direction={Vector3.Up()}
+              intensity={0.7}
+            />
+            <ground
+              name="ground"
+              checkCollisions
+              height={20}
+              width={20}
+              position={Vector3.Zero()}
+            />
+            <Avatar />
+            <Players />
+          </>
+        </SocketProvider>
       </Scene>
     </Engine>
   );
