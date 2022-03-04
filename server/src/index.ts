@@ -19,16 +19,15 @@ const server = app.listen(port);
 const io = new Server(server);
 
 io.on("connection", (socket: Socket) => {
-  console.log("Player connected!", socket.id);
+  console.log("Player connected!", socket.id, socket.handshake.auth.userId);
 
   socket.on("join_game", (username: string) => {
     console.log("join game: ", username);
   });
-  socket.on("input", (keyCode) => {
-    console.log("input: ", keyCode);
-  });
-  socket.on("disconnect", () => {
-    console.log("disconnect");
+  socket.on("disconnect", (reason) => {
+    socket.broadcast.emit("player_disconnect", {
+      userId: socket.handshake.auth.userId,
+    });
   });
   socket.on(
     "player_move",
@@ -41,11 +40,4 @@ io.on("connection", (socket: Socket) => {
       socket.broadcast.emit("player_move", data);
     }
   );
-
-  socket.emit("game_update", { ms: Date.now() });
-
-  setInterval(() => {
-    console.log("interval!");
-    socket.emit("game_update", { ms: Date.now() });
-  }, 5000);
 });

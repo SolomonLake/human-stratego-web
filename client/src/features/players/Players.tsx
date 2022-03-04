@@ -11,9 +11,9 @@ export const Players = () => {
   const [players, setPlayers] = useState<{ [userId: string]: PlayerType }>({});
 
   useListenPlayerMove((data) => {
-    console.log("player move received", data);
     const player: PlayerType = {
       ...players[data.userId],
+      userId: data.userId,
       position: new Vector3(
         data.position.x,
         data.position.y / 2,
