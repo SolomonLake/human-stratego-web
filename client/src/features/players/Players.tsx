@@ -1,37 +1,51 @@
 import { Vector3 } from "@babylonjs/core";
-import { useEffect, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { AVATAR_HEIGHT, AVATAR_WIDTH } from "../avatar/Avatar";
 import { useSocket } from "../sockets/useSocket";
+import { usePlayerDisconnectListener } from "./usePlayerDisconnectListener";
+import { usePlayerMoveListener } from "./usePlayerMoveListener";
 
-type PlayerType = { userId: string; position: Vector3 };
+export type PlayerType = { userId: string; position: Vector3 };
+
+export type PlayerMap = { [userId: string]: PlayerType };
+
+type PlayerAction =
+  | { type: "player/playerMoved"; event: PlayerMoveEvent }
+  | { type: "player/playerDisconnected"; event: PlayerDisconnectEvent };
+
+const reducer = (state: PlayerMap, action: PlayerAction) => {
+  switch (action.type) {
+    case "player/playerMoved": {
+      const { userId, position } = action.event;
+      return {
+        ...state,
+        [userId]: {
+          ...state[userId],
+          userId: userId,
+          position: new Vector3(position.x, position.y / 2, position.z),
+        },
+      };
+    }
+    case "player/playerDisconnected": {
+      const { [action.event.userId]: _, ...restState } = state;
+      return restState;
+    }
+  }
+};
 
 export const Players = () => {
-  const [players, setPlayers] = useState<{ [userId: string]: PlayerType }>({});
-  const socket = useSocket();
+  const [playersState, dispatch] = useReducer(reducer, {});
 
-  useEffect(() => {
-    const onPlayerMove = (data: PlayerMoveEvent) => {
-      const player: PlayerType = {
-        ...players[data.userId],
-        userId: data.userId,
-        position: new Vector3(
-          data.position.x,
-          data.position.y / 2,
-          data.position.z
-        ),
-      };
-      setPlayers({ ...players, [data.userId]: player });
-    };
-    socket.on("playerMove", onPlayerMove);
-
-    return () => {
-      socket.off("playerMove", onPlayerMove);
-    };
-  }, [socket]);
+  usePlayerMoveListener((ev) =>
+    dispatch({ type: "player/playerMoved", event: ev })
+  );
+  usePlayerDisconnectListener((ev) =>
+    dispatch({ type: "player/playerDisconnected", event: ev })
+  );
 
   return (
     <>
-      {Object.values(players).map((player, index) => {
+      {Object.values(playersState).map((player, index) => {
         return (
           <box
             name={`player-${index}`}
