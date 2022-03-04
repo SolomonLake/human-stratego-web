@@ -7,9 +7,9 @@ export const SocketProvider = (props: { children: ReactNode }) => {
   const userId = useUserId();
 
   const socketUrl = `ws://${window.location.host}`;
-  const [socket, setSocket] = useState<Socket>(
-    io(socketUrl, { auth: { userId } })
-  );
+  const [socket, setSocket] = useState<
+    Socket<ServerToClientEvents, ClientToServerEvents>
+  >(io(socketUrl, { auth: { userId } }));
 
   return (
     <SocketContext.Provider value={socket}>

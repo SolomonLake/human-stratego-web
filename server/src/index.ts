@@ -16,9 +16,15 @@ app.get("/api/hey", (req, res) => res.send({ message: "ho!" }));
 const port = process.env.PORT || 8080;
 const server = app.listen(port);
 
-const io = new Server(server);
+enum ServerToClientEvent {
+  noArg,
+  basicEmit,
+  withAck,
+}
 
-io.on("connection", (socket: Socket) => {
+const io = new Server<ClientToServerEvents, ServerToClientEvents>(server);
+
+io.on("connection", (socket) => {
   console.log("Player connected!", socket.id, socket.handshake.auth.userId);
 
   socket.on("join_game", (username: string) => {
@@ -38,6 +44,9 @@ io.on("connection", (socket: Socket) => {
       console.log("userId", data.userId);
       console.log("position", data.position);
       socket.broadcast.emit("player_move", data);
+      socket.emit("withAck", "4", (ev) => {
+        var a = ev;
+      });
     }
   );
 });

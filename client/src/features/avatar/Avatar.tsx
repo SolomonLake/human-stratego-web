@@ -1,6 +1,7 @@
 import { FreeCamera, Vector3 } from "@babylonjs/core";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useBeforeRender, useEngine, useScene } from "react-babylonjs";
+import { PlayerMove3 } from "../../../../types/playerMove";
 
 import { useEmitPlayerMove } from "../players/useEmitPlayerMove";
 import { useUserId } from "../user/useUserId";
@@ -9,6 +10,8 @@ export const AVATAR_HEIGHT = 1;
 export const AVATAR_WIDTH = AVATAR_HEIGHT * 0.33;
 
 const CAMERA_POSITION = new Vector3(0, AVATAR_HEIGHT, 0);
+
+const a: PlayerMove3 = 1;
 
 export const Avatar = ({}: {}) => {
   const engine = useEngine();
