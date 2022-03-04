@@ -2,7 +2,7 @@ import { useSocket } from "../sockets/useSocket";
 import { PlayerMoveEvent } from "./playerTypes";
 
 export const useEmitPlayerMove = () => {
-  const { emit } = useSocket<PlayerMoveEvent>();
+  const { emit } = useSocket();
 
-  return (data: PlayerMoveEvent) => emit("player_move", data);
+  return (data: PlayerMoveEvent) => emit("playerMove", data);
 };

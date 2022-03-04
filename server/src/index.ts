@@ -27,26 +27,23 @@ const io = new Server<ClientToServerEvents, ServerToClientEvents>(server);
 io.on("connection", (socket) => {
   console.log("Player connected!", socket.id, socket.handshake.auth.userId);
 
-  socket.on("join_game", (username: string) => {
-    console.log("join game: ", username);
-  });
+  // socket.on("join_game", (username: string) => {
+  //   console.log("join game: ", username);
+  // });
   socket.on("disconnect", (reason) => {
-    socket.broadcast.emit("player_disconnect", {
+    socket.broadcast.emit("playerDisconnect", {
       userId: socket.handshake.auth.userId,
     });
   });
   socket.on(
-    "player_move",
+    "playerMove",
     (data: {
       userId: string;
       position: { x: number; y: number; z: number };
     }) => {
       console.log("userId", data.userId);
       console.log("position", data.position);
-      socket.broadcast.emit("player_move", data);
-      socket.emit("withAck", "4", (ev) => {
-        var a = ev;
-      });
+      socket.broadcast.emit("playerMove", data);
     }
   );
 });

@@ -1,11 +1,11 @@
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { SocketContext } from "./SocketContext";
 
-export const useSocket = <T>() => {
+export const useSocket = () => {
   const socket = useContext(SocketContext);
 
   const listen = useCallback(
-    (ev: string, listener: (data: T) => void) => {
+    (ev, listener: (data: any) => void) => {
       if (socket) {
         console.log("LISTNER");
         socket.on(ev, listener);
@@ -15,7 +15,7 @@ export const useSocket = <T>() => {
   );
 
   const off = useCallback(
-    (ev: string, listener: (data: T) => void) => {
+    (ev, listener: (data: any) => void) => {
       if (socket) {
         socket.off(ev, listener);
       }
@@ -24,7 +24,7 @@ export const useSocket = <T>() => {
   );
 
   const emit = useCallback(
-    (ev: string, data: T) => {
+    (ev, data) => {
       if (socket) {
         socket.emit(ev, data);
       }

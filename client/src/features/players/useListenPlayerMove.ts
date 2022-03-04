@@ -1,17 +1,14 @@
 import { useEffect } from "react";
 import { useSocket } from "../sockets/useSocket";
-import { PlayerMoveEvent } from "./playerTypes";
 
-export const useListenPlayerMove = (
-  listener: (data: PlayerMoveEvent) => void
-) => {
-  const { listen, off } = useSocket<PlayerMoveEvent>();
+export const useListenPlayerMove = (listener: (data: any) => void) => {
+  const { listen, off } = useSocket();
 
   useEffect(() => {
-    listen("player_move", listener);
+    listen("playerMove", listener);
 
     return () => {
-      off("player_move", listener);
+      off("playerMove", listener);
     };
   }, []);
 };

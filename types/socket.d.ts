@@ -1,9 +1,17 @@
+type PlayerMoveEvent = {
+  userId: string;
+  position: { x: number; y: number; z: number };
+};
+
+type PlayerDisconnectEvent = {
+  userId: string;
+};
+
 interface ServerToClientEvents {
-  noArg: () => void;
-  basicEmit: (a: number, b: string, c: Buffer) => void;
-  withAck: (d: string, callback: (e: number) => void) => void;
+  playerMove: (ev: PlayerMoveEvent) => void;
+  playerDisconnect: (ev: PlayerDisconnectEvent) => void;
 }
 
 interface ClientToServerEvents {
-  hello: () => void;
+  playerMove: (ev: PlayerMoveEvent) => void;
 }
