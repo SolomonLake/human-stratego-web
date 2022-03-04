@@ -2,26 +2,32 @@ import { Vector3 } from "@babylonjs/core";
 import { useEffect, useState } from "react";
 import { AVATAR_HEIGHT, AVATAR_WIDTH } from "../avatar/Avatar";
 import { useSocket } from "../sockets/useSocket";
-import { useListenPlayerMove } from "./useListenPlayerMove";
 
 type PlayerType = { userId: string; position: Vector3 };
 
 export const Players = () => {
-  // TODO: get player positions from websocket and update
   const [players, setPlayers] = useState<{ [userId: string]: PlayerType }>({});
+  const socket = useSocket();
 
-  useListenPlayerMove((data) => {
-    const player: PlayerType = {
-      ...players[data.userId],
-      userId: data.userId,
-      position: new Vector3(
-        data.position.x,
-        data.position.y / 2,
-        data.position.z
-      ),
+  useEffect(() => {
+    const onPlayerMove = (data: PlayerMoveEvent) => {
+      const player: PlayerType = {
+        ...players[data.userId],
+        userId: data.userId,
+        position: new Vector3(
+          data.position.x,
+          data.position.y / 2,
+          data.position.z
+        ),
+      };
+      setPlayers({ ...players, [data.userId]: player });
     };
-    setPlayers({ ...players, [data.userId]: player });
-  });
+    socket.on("playerMove", onPlayerMove);
+
+    return () => {
+      socket.off("playerMove", onPlayerMove);
+    };
+  }, [socket]);
 
   return (
     <>
