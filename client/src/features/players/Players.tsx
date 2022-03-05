@@ -37,9 +37,9 @@ export const Players = () => {
   const socket = useSocket();
 
   useEffect(() => {
-    socket.once("serverCache", (cache) =>
-      dispatch({ type: "player/playersReceived", players: cache.players })
-    );
+    socket.once("serverCache", (cache) => {
+      dispatch({ type: "player/playersReceived", players: cache.players });
+    });
   });
 
   usePlayerMoveListener((ev) =>

@@ -1,6 +1,6 @@
 import { FreeCamera, Vector3 } from "@babylonjs/core";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useBeforeRender, useEngine, useScene } from "react-babylonjs";
+import { useEffect, useRef, useState } from "react";
+import { useBeforeRender, useEngine } from "react-babylonjs";
 import { useSocket } from "../sockets/useSocket";
 import { useUserId } from "../user/useUserId";
 
@@ -9,7 +9,7 @@ export const AVATAR_WIDTH = AVATAR_HEIGHT * 0.33;
 
 const CAMERA_POSITION = new Vector3(0, AVATAR_HEIGHT, 0);
 
-export const Avatar = ({}: {}) => {
+export const Avatar = () => {
   const engine = useEngine();
   const cameraRef = useRef<FreeCamera | null>(null);
   const socket = useSocket();
