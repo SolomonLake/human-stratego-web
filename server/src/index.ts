@@ -16,21 +16,21 @@ app.get("/api/hey", (req, res) => res.send({ message: "ho!" }));
 const port = process.env.PORT || 8080;
 const server = app.listen(port);
 
-enum ServerToClientEvent {
-  noArg,
-  basicEmit,
-  withAck,
-}
+const cache: ServerCache = {
+  players: {},
+};
 
 const io = new Server<ClientToServerEvents, ServerToClientEvents>(server);
 
 io.on("connection", (socket) => {
   console.log("Player connected!", socket.id, socket.handshake.auth.userId);
+  socket.emit("serverCache", cache);
 
   // socket.on("join_game", (username: string) => {
   //   console.log("join game: ", username);
   // });
   socket.on("disconnect", (reason) => {
+    delete cache.players[socket.handshake.auth.userId];
     socket.broadcast.emit("playerDisconnect", {
       userId: socket.handshake.auth.userId,
     });
@@ -41,8 +41,10 @@ io.on("connection", (socket) => {
       userId: string;
       position: { x: number; y: number; z: number };
     }) => {
-      console.log("userId", data.userId);
-      console.log("position", data.position);
+      if (!cache.players[data.userId]) {
+        cache.players[data.userId] = { position: data.position };
+      }
+      cache.players[data.userId].position = data.position;
       socket.broadcast.emit("playerMove", data);
     }
   );
