@@ -1,4 +1,14 @@
-import { useContext } from "react";
-import { UserIdContext } from "./UserIdContext";
+import { useMemo } from "react";
+import { v4 as uuidv4 } from "uuid";
 
-export const useUserId = () => useContext(UserIdContext);
+export const useUserId = () => {
+  const localStorageUserId = localStorage.getItem("userId");
+
+  if (localStorageUserId) {
+    return localStorageUserId;
+  } else {
+    const userId = uuidv4();
+    localStorage.setItem("userId", userId);
+    return userId;
+  }
+};
