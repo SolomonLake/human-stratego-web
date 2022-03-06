@@ -1,17 +1,21 @@
 import { Vector3 } from "@babylonjs/core";
 import { useEffect, useReducer, useState } from "react";
 import { AVATAR_HEIGHT, AVATAR_WIDTH } from "../avatar/Avatar";
+import { useServerCacheOnce } from "../serverCache/useServerCacheOnce";
 import { useSocket } from "../sockets/useSocket";
+import { useUserId } from "../user/useUserId";
 import { usePlayerDisconnectListener } from "./usePlayerDisconnectListener";
 import { usePlayerMoveListener } from "./usePlayerMoveListener";
 
 type PlayerAction =
+  | { type: "player/playerJoined"; event: PlayerJoinEvent }
   | { type: "player/playerMoved"; event: PlayerMoveEvent }
   | { type: "player/playerDisconnected"; event: PlayerDisconnectEvent }
   | { type: "player/playersReceived"; players: ServerCache["players"] };
 
 const playersReducer = (state: PlayerMap, action: PlayerAction) => {
   switch (action.type) {
+    case "player/playerJoined":
     case "player/playerMoved": {
       const { userId, position } = action.event;
       return {
@@ -23,8 +27,14 @@ const playersReducer = (state: PlayerMap, action: PlayerAction) => {
       };
     }
     case "player/playerDisconnected": {
-      const { [action.event.userId]: _, ...restState } = state;
-      return restState;
+      const { userId, disconnectedAt } = action.event;
+      return {
+        ...state,
+        [userId]: {
+          ...state[userId],
+          disconnectedAt,
+        },
+      };
     }
     case "player/playersReceived": {
       return action.players;
@@ -35,11 +45,20 @@ const playersReducer = (state: PlayerMap, action: PlayerAction) => {
 export const Players = () => {
   const [playersState, dispatch] = useReducer(playersReducer, {});
   const socket = useSocket();
+  const userId = useUserId();
+
+  useServerCacheOnce((cache) =>
+    dispatch({ type: "player/playersReceived", players: cache.players })
+  );
 
   useEffect(() => {
-    socket.once("serverCache", (cache) => {
-      dispatch({ type: "player/playersReceived", players: cache.players });
-    });
+    const onPlayerJoin = (ev: PlayerJoinEvent) => {
+      dispatch({ type: "player/playerJoined", event: ev });
+    };
+    socket.on("playerJoin", onPlayerJoin);
+    return () => {
+      socket.off("playerJoin", onPlayerJoin);
+    };
   });
 
   usePlayerMoveListener((ev) =>
@@ -51,24 +70,27 @@ export const Players = () => {
 
   return (
     <>
-      {Object.values(playersState).map((player, index) => {
-        return (
-          <box
-            name={`player-${index}`}
-            key={index}
-            position={
-              new Vector3(
-                player.position.x,
-                player.position.y / 2,
-                player.position.z
-              )
-            }
-            height={AVATAR_HEIGHT}
-            width={AVATAR_WIDTH}
-            depth={AVATAR_WIDTH}
-          />
-        );
-      })}
+      {Object.keys(playersState)
+        .filter((playerId) => playerId !== userId)
+        .map((playerId) => {
+          const player = playersState[playerId];
+          return (
+            <box
+              name={`player-${playerId}`}
+              key={playerId}
+              position={
+                new Vector3(
+                  player.position.x,
+                  player.position.y + AVATAR_HEIGHT / 2,
+                  player.position.z
+                )
+              }
+              height={AVATAR_HEIGHT}
+              width={AVATAR_WIDTH}
+              depth={AVATAR_WIDTH}
+            />
+          );
+        })}
     </>
   );
 };

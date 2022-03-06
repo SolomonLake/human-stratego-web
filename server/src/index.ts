@@ -23,16 +23,28 @@ const cache: ServerCache = {
 const io = new Server<ClientToServerEvents, ServerToClientEvents>(server);
 
 io.on("connection", (socket) => {
-  console.log("Player connected!", socket.id, socket.handshake.auth.userId);
+  const userId = socket.handshake.auth.userId;
+  console.log("Player connected!", socket.id, userId);
+
+  if (!cache.players[userId]) {
+    cache.players[userId] = { position: { x: 0, y: 0, z: 0 } };
+
+    socket.broadcast.emit("playerJoin", {
+      userId,
+      position: cache.players[userId].position,
+    });
+  }
+
+  cache.players[userId].disconnectedAt = undefined;
+
   socket.emit("serverCache", cache);
 
-  // socket.on("join_game", (username: string) => {
-  //   console.log("join game: ", username);
-  // });
   socket.on("disconnect", (reason) => {
-    delete cache.players[socket.handshake.auth.userId];
+    const disconnectedAt = Date.now();
+    cache.players[userId].disconnectedAt = disconnectedAt;
     socket.broadcast.emit("playerDisconnect", {
-      userId: socket.handshake.auth.userId,
+      userId,
+      disconnectedAt,
     });
   });
   socket.on(
