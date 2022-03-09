@@ -12,8 +12,10 @@ type PlayerDisconnectEvent = {
   disconnectedAt: number;
 };
 
+type Player = { position: PlayerPosition; disconnectedAt?: number };
+
 type PlayerMap = {
-  [userId: string]: { position: PlayerPosition; disconnectedAt?: number };
+  [userId: string]: Player;
 };
 
 type ServerCache = {

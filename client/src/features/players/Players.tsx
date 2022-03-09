@@ -1,22 +1,18 @@
-import { Vector3 } from "@babylonjs/core";
 import { useEffect, useReducer, useState } from "react";
-import { AVATAR_HEIGHT, AVATAR_WIDTH } from "../avatar/Avatar";
 import { useServerCacheOnce } from "../serverCache/useServerCacheOnce";
 import { useSocket } from "../sockets/useSocket";
 import { useUserId } from "../user/useUserId";
+import { Player } from "./Player";
 import { usePlayerDisconnectListener } from "./usePlayerDisconnectListener";
-import { usePlayerMoveListener } from "./usePlayerMoveListener";
 
 type PlayerAction =
   | { type: "player/playerJoined"; event: PlayerJoinEvent }
-  | { type: "player/playerMoved"; event: PlayerMoveEvent }
   | { type: "player/playerDisconnected"; event: PlayerDisconnectEvent }
   | { type: "player/playersReceived"; players: ServerCache["players"] };
 
 const playersReducer = (state: PlayerMap, action: PlayerAction) => {
   switch (action.type) {
-    case "player/playerJoined":
-    case "player/playerMoved": {
+    case "player/playerJoined": {
       const { userId, position } = action.event;
       return {
         ...state,
@@ -61,9 +57,6 @@ export const Players = () => {
     };
   });
 
-  usePlayerMoveListener((ev) =>
-    dispatch({ type: "player/playerMoved", event: ev })
-  );
   usePlayerDisconnectListener((ev) =>
     dispatch({ type: "player/playerDisconnected", event: ev })
   );
@@ -73,21 +66,11 @@ export const Players = () => {
       {Object.keys(playersState)
         .filter((playerId) => playerId !== userId)
         .map((playerId) => {
-          const player = playersState[playerId];
           return (
-            <box
-              name={`player-${playerId}`}
+            <Player
               key={playerId}
-              position={
-                new Vector3(
-                  player.position.x,
-                  player.position.y + AVATAR_HEIGHT / 2,
-                  player.position.z
-                )
-              }
-              height={AVATAR_HEIGHT}
-              width={AVATAR_WIDTH}
-              depth={AVATAR_WIDTH}
+              userId={playerId}
+              initialPlayer={playersState[playerId]}
             />
           );
         })}
