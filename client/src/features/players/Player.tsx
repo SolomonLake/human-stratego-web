@@ -1,5 +1,12 @@
-import { Mesh, Vector3 } from "@babylonjs/core";
-import { useRef } from "react";
+import {
+  ActionManager,
+  InterpolateValueAction,
+  Mesh,
+  Scalar,
+  Vector3,
+} from "@babylonjs/core";
+import { useEffect, useRef, useState } from "react";
+import { useBeforeRender, useScene } from "react-babylonjs";
 import { AVATAR_HEIGHT, AVATAR_WIDTH } from "../avatar/Avatar";
 import { usePlayerMoveListener } from "./usePlayerMoveListener";
 
@@ -12,14 +19,35 @@ export const Player = ({
 }) => {
   const playerRef = useRef<Mesh | null>(null);
 
+  const [livePosition, setLivePosition] = useState<PlayerPosition>(
+    initialPlayer.position
+  );
+
   usePlayerMoveListener((ev) => {
     const playerMesh = playerRef.current;
     if (playerMesh && ev.userId === userId) {
       console.log("moving", ev);
-      playerMesh.position.x = ev.position.x;
-      playerMesh.position.y = ev.position.y + AVATAR_HEIGHT / 2;
-      playerMesh.position.z = ev.position.z;
-      // playerRef.current.transform(data.x, data.y, data.z, data.rotation);
+      setLivePosition(ev.position);
+    }
+  });
+
+  useBeforeRender(() => {
+    const playerMesh = playerRef.current;
+    if (playerMesh) {
+      const { x, y, z } = playerMesh.position;
+      const liveVector3 = new Vector3(
+        livePosition.x,
+        livePosition.y + AVATAR_HEIGHT / 2,
+        livePosition.z
+      );
+      if (!liveVector3.equalsWithEpsilon(playerMesh.position, 0.1)) {
+        Vector3.LerpToRef(
+          playerMesh.position,
+          liveVector3,
+          0.01,
+          playerMesh.position
+        );
+      }
     }
   });
 

@@ -1,9 +1,10 @@
 import { FreeCamera, Vector3 } from "@babylonjs/core";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useBeforeRender, useEngine } from "react-babylonjs";
 import { useServerCacheOnce } from "../serverCache/useServerCacheOnce";
 import { useSocket } from "../sockets/useSocket";
 import { useUserId } from "../user/useUserId";
+import { throttle } from "throttle-debounce";
 
 export const AVATAR_HEIGHT = 1;
 export const AVATAR_WIDTH = AVATAR_HEIGHT * 0.33;
@@ -15,6 +16,20 @@ export const Avatar = () => {
   const cameraRef = useRef<FreeCamera | null>(null);
   const socket = useSocket();
   const userId = useUserId();
+
+  const throttleEmitPlayerMove = useCallback(
+    throttle(500, ({ x, y, z }: PlayerPosition) => {
+      socket.emit("playerMove", {
+        userId: userId,
+        position: {
+          x,
+          y,
+          z,
+        },
+      });
+    }),
+    [socket, userId]
+  );
 
   const [initialPosition, setInitialPosition] =
     useState<PlayerPosition>(CAMERA_POSITION);
@@ -55,15 +70,9 @@ export const Avatar = () => {
         cameraPosition.y !== y ||
         cameraPosition.z !== z
       ) {
-        setCameraPosition({ x, y, z });
-        socket.emit("playerMove", {
-          userId: userId,
-          position: {
-            x,
-            y,
-            z,
-          },
-        });
+        const newPosition = { x, y, z };
+        setCameraPosition(newPosition);
+        throttleEmitPlayerMove(newPosition);
       }
     }
   });
