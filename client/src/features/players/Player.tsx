@@ -1,6 +1,7 @@
 import {
   ActionManager,
   Color3,
+  Color4,
   InterpolateValueAction,
   Mesh,
   Scalar,
@@ -72,6 +73,9 @@ export const Player = ({
           initialPlayer.position.z
         )
       }
+      onCreated={(box) => box.enableEdgesRendering()}
+      edgesWidth={1}
+      edgesColor={new Color4(0, 0, 0, 1)}
       rotation={new Vector3(0, initialPlayer.position.yRotation, 0)}
       height={AVATAR_HEIGHT}
       width={AVATAR_WIDTH}

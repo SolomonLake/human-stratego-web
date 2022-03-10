@@ -7,6 +7,7 @@ import { useUserId } from "../user/useUserId";
 import { throttle } from "throttle-debounce";
 
 export const AVATAR_HEIGHT = 1;
+export const AVATAR_FOREHEAD_HEIGHT = 0.05;
 export const AVATAR_WIDTH = AVATAR_HEIGHT * 0.33;
 export const AVATAR_DEPTH = AVATAR_HEIGHT * 0.15;
 
@@ -66,7 +67,7 @@ export const Avatar = () => {
     const camera = cameraRef.current;
     if (camera) {
       const { x, y: cameraY, z } = camera.position;
-      const y = cameraY - AVATAR_HEIGHT;
+      const y = cameraY - AVATAR_HEIGHT + AVATAR_FOREHEAD_HEIGHT;
       const yRotation = camera.rotation.y;
       if (
         cameraPosition.x !== x ||
@@ -90,6 +91,7 @@ export const Avatar = () => {
       keysDown={[83]}
       keysRight={[68]}
       checkCollisions
+      ellipsoidOffset-y={AVATAR_FOREHEAD_HEIGHT}
       position={
         new Vector3(
           initialPosition.x,
