@@ -1,5 +1,6 @@
 import {
   ActionManager,
+  Color3,
   InterpolateValueAction,
   Mesh,
   Scalar,
@@ -62,7 +63,7 @@ export const Player = ({
 
   return (
     <box
-      name={`player-${userId}`}
+      name="player"
       ref={playerRef}
       position={
         new Vector3(
@@ -75,7 +76,8 @@ export const Player = ({
       height={AVATAR_HEIGHT}
       width={AVATAR_WIDTH}
       depth={AVATAR_DEPTH}
-      receiveShadows
-    />
+    >
+      <standardMaterial name="player-material" diffuseColor={Color3.Green()} />
+    </box>
   );
 };

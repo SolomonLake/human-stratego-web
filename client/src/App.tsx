@@ -29,10 +29,10 @@ export const App = () => {
           <>
             <directionalLight
               name="light1"
-              direction={new Vector3(0.5, -1, 0)}
+              direction={new Vector3(1, -1, 1)}
               intensity={0.7}
             >
-              <shadowGenerator mapSize={1024} />
+              <shadowGenerator mapSize={1024} shadowCasters={["player"]} />
             </directionalLight>
             <ground
               name="ground"
