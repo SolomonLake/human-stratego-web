@@ -1071,7 +1071,7 @@
   dependencies:
     tslib ">=1.10.0"
 
-"@babylonjs/core@^5.0.0":
+"@babylonjs/core@^5.0.0-alpha":
   version "5.0.0-rc.2"
   resolved "https://registry.yarnpkg.com/@babylonjs/core/-/core-5.0.0-rc.2.tgz#e844289ec44eec06a9aeb52796b98fea1953d3d1"
   integrity sha512-XvGmAauX83EsOKFeIcku3jxFKKNq7+nBhOXZG+gXLrAnZITFlB56uXbo7YlZWLbmZb46Qyqs78nUrZXp7hfZ5Q==
