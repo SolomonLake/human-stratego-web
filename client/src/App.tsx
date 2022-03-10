@@ -29,11 +29,17 @@ export const App = () => {
           <>
             <directionalLight
               name="light1"
-              direction={new Vector3(1, -1, 1)}
-              intensity={0.7}
+              direction={new Vector3(1, -1, 0)}
+              position={new Vector3(-1000, 1000, 0)}
+              intensity={0.5}
             >
               <shadowGenerator mapSize={1024} shadowCasters={["player"]} />
             </directionalLight>
+            <hemisphericLight
+              name="light2"
+              direction={new Vector3(0, -1, 0)}
+              intensity={0.4}
+            />
             <ground
               name="ground"
               checkCollisions
