@@ -27,17 +27,20 @@ export const App = () => {
       >
         <SocketProvider>
           <>
-            <hemisphericLight
+            <directionalLight
               name="light1"
-              direction={Vector3.Up()}
+              direction={new Vector3(0.5, -1, 0)}
               intensity={0.7}
-            />
+            >
+              <shadowGenerator mapSize={1024} />
+            </directionalLight>
             <ground
               name="ground"
               checkCollisions
               height={20}
               width={20}
               position={Vector3.Zero()}
+              receiveShadows
             />
             <Avatar />
             <Players />

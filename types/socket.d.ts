@@ -1,4 +1,4 @@
-type PlayerPosition = { x: number; y: number; z: number };
+type PlayerPosition = { x: number; y: number; z: number; yRotation: number };
 
 type PlayerJoinEvent = { userId: string; position: PlayerPosition };
 

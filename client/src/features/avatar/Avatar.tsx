@@ -8,8 +8,9 @@ import { throttle } from "throttle-debounce";
 
 export const AVATAR_HEIGHT = 1;
 export const AVATAR_WIDTH = AVATAR_HEIGHT * 0.33;
+export const AVATAR_DEPTH = AVATAR_HEIGHT * 0.15;
 
-const CAMERA_POSITION = { x: 0, y: 0, z: 0 };
+const CAMERA_POSITION = { x: 0, y: 0, z: 0, yRotation: 0 };
 
 export const Avatar = () => {
   const engine = useEngine();
@@ -18,13 +19,14 @@ export const Avatar = () => {
   const userId = useUserId();
 
   const throttleEmitPlayerMove = useCallback(
-    throttle(500, ({ x, y, z }: PlayerPosition) => {
+    throttle(500, ({ x, y, z, yRotation }: PlayerPosition) => {
       socket.emit("playerMove", {
         userId: userId,
         position: {
           x,
           y,
           z,
+          yRotation,
         },
       });
     }),
@@ -65,12 +67,14 @@ export const Avatar = () => {
     if (camera) {
       const { x, y: cameraY, z } = camera.position;
       const y = cameraY - AVATAR_HEIGHT;
+      const yRotation = camera.rotation.y;
       if (
         cameraPosition.x !== x ||
         cameraPosition.y !== y ||
-        cameraPosition.z !== z
+        cameraPosition.z !== z ||
+        cameraPosition.yRotation !== yRotation
       ) {
-        const newPosition = { x, y, z };
+        const newPosition = { x, y, z, yRotation };
         setCameraPosition(newPosition);
         throttleEmitPlayerMove(newPosition);
       }
@@ -93,8 +97,9 @@ export const Avatar = () => {
           initialPosition.z
         )
       }
+      rotation={new Vector3(0, initialPosition.yRotation, 0)}
       ellipsoid={
-        new Vector3(AVATAR_WIDTH / 2, AVATAR_HEIGHT / 2, AVATAR_WIDTH / 2)
+        new Vector3(AVATAR_WIDTH / 2, AVATAR_HEIGHT / 2, AVATAR_DEPTH / 2)
       }
       applyGravity
       speed={0.25}
