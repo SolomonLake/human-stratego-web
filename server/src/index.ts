@@ -27,7 +27,7 @@ io.on("connection", (socket) => {
   console.log("Player connected!", socket.id, userId);
 
   if (!cache.players[userId]) {
-    cache.players[userId] = { position: { x: 0, y: 0, z: 0 } };
+    cache.players[userId] = { position: { x: 0, y: 0, z: 0, yRotation: 0 } };
 
     socket.broadcast.emit("playerJoin", {
       userId,
@@ -49,10 +49,7 @@ io.on("connection", (socket) => {
   });
   socket.on(
     "playerMove",
-    (data: {
-      userId: string;
-      position: { x: number; y: number; z: number };
-    }) => {
+    (data: { userId: string; position: PlayerPosition }) => {
       if (!cache.players[data.userId]) {
         cache.players[data.userId] = { position: data.position };
       }
