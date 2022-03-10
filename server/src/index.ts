@@ -11,14 +11,6 @@ app.get("/", function (req, res) {
   res.sendFile(path.join(__dirname, "../../client/build/index.html"));
 });
 
-app.get("/version", (req, res) => {
-  const sha = require("child_process")
-    .execSync("git rev-parse --short HEAD")
-    .toString()
-    .trim();
-  res.send(sha);
-});
-
 app.get("/api/hey", (req, res) => res.send({ message: "ho!" }));
 
 const port = process.env.PORT || 8080;
