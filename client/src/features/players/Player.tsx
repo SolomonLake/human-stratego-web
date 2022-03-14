@@ -6,6 +6,7 @@ import {
   Mesh,
   Scalar,
   Vector3,
+  Vector4,
 } from "@babylonjs/core";
 import { useEffect, useRef, useState } from "react";
 import { useBeforeRender, useScene } from "react-babylonjs";
@@ -80,8 +81,26 @@ export const Player = ({
       height={AVATAR_HEIGHT}
       width={AVATAR_WIDTH}
       depth={AVATAR_DEPTH}
+      faceColors={[
+        Color3.White().toColor4(), // front
+        Color3.Green().toColor4(), // back
+        Color3.Green().toColor4(), // right
+        Color3.Green().toColor4(), // left,
+        Color3.Green().toColor4(), // top or bottom,
+        Color3.Green().toColor4(), // top or bottom,
+      ]}
+      faceUV={[
+        new Vector4(0, 1, 1, 0),
+        new Vector4(0, 0, 0, 0),
+        new Vector4(0, 0, 0, 0),
+        new Vector4(0, 0, 0, 0),
+        new Vector4(0, 0, 0, 0),
+        new Vector4(0, 0, 0, 0),
+      ]}
     >
-      <standardMaterial name="player-material" diffuseColor={Color3.Green()} />
+      <standardMaterial name="player-material">
+        <texture url="/images/raccoon-dance.jpg" />
+      </standardMaterial>
     </box>
   );
 };
