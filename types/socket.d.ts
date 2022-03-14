@@ -1,5 +1,3 @@
-type PlayerPosition = { x: number; y: number; z: number; yRotation: number };
-
 type PlayerJoinEvent = { userId: string; position: PlayerPosition };
 
 type PlayerMoveEvent = {
@@ -10,16 +8,6 @@ type PlayerMoveEvent = {
 type PlayerDisconnectEvent = {
   userId: string;
   disconnectedAt: number;
-};
-
-type Player = { position: PlayerPosition; disconnectedAt?: number };
-
-type PlayerMap = {
-  [userId: string]: Player;
-};
-
-type ServerCache = {
-  players: PlayerMap;
 };
 
 interface ServerToClientEvents {

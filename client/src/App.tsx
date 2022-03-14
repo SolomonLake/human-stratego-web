@@ -1,12 +1,9 @@
-import { Color3, Mesh, Vector3 } from "@babylonjs/core";
+import { Vector3 } from "@babylonjs/core";
 import { Engine, Scene } from "react-babylonjs";
-import { useEffect, useReducer, useRef } from "react";
 import { Avatar } from "./features/avatar/Avatar";
 import { ResizeEngine } from "./features/resize/ResizeEngine";
 import { Players } from "./features/players/Players";
 import { SocketProvider } from "./features/sockets/SocketProvider";
-import { SocketContext } from "./features/sockets/SocketContext";
-import { io } from "socket.io-client";
 
 export const App = () => {
   const framesPerSecond = 60;
@@ -38,7 +35,7 @@ export const App = () => {
             <hemisphericLight
               name="light2"
               direction={new Vector3(0, -1, 0)}
-              intensity={0.4}
+              intensity={0.5}
             />
             <ground
               name="ground"
