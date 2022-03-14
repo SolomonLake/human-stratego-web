@@ -11,12 +11,6 @@ export const SocketProvider = (props: { children: ReactNode }) => {
     Socket<ServerToClientEvents, ClientToServerEvents>
   >(io(socketUrl, { auth: { userId } }));
 
-  useEffect(() => {
-    return () => {
-      socket.disconnect();
-    };
-  });
-
   return (
     <SocketContext.Provider value={socket}>
       {props.children}
