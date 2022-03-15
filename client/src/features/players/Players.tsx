@@ -40,12 +40,14 @@ const playersReducer = (state: PlayerMap, action: PlayerAction) => {
 
 export const Players = () => {
   const [playersState, dispatch] = useReducer(playersReducer, {});
+  const [teams, setTeams] = useState<TeamMap | undefined>(undefined);
   const socket = useSocket();
   const userId = useUserId();
 
-  useServerCacheOnce((cache) =>
-    dispatch({ type: "player/playersReceived", players: cache.players })
-  );
+  useServerCacheOnce((cache) => {
+    dispatch({ type: "player/playersReceived", players: cache.players });
+    setTeams(cache.teams);
+  });
 
   useEffect(() => {
     const onPlayerJoin = (ev: PlayerJoinEvent) => {
@@ -61,16 +63,22 @@ export const Players = () => {
     dispatch({ type: "player/playerDisconnected", event: ev })
   );
 
+  if (!teams) {
+    return null;
+  }
+
   return (
     <>
       {Object.keys(playersState)
         .filter((playerId) => playerId !== userId)
         .map((playerId) => {
+          const player = playersState[playerId];
           return (
             <Player
               key={playerId}
               userId={playerId}
-              initialPlayer={playersState[playerId]}
+              initialPlayer={player}
+              team={teams[player.teamId]}
             />
           );
         })}

@@ -18,16 +18,37 @@ const server = app.listen(port);
 
 const cache: ServerCache = {
   players: {},
+  teams: { "1": { hexColor: "#E07A5F" }, "2": { hexColor: "#81B29A" } },
 };
 
 const io = new Server<ClientToServerEvents, ServerToClientEvents>(server);
+
+function indexOfSmallest(a: any[]) {
+  let lowest = a[Math.floor(Math.random() * a.length)];
+  for (var i = 0; i < a.length; i++) {
+    if (a[i] < a[lowest]) lowest = i;
+  }
+  return lowest;
+}
 
 io.on("connection", (socket) => {
   const userId = socket.handshake.auth.userId;
   console.log("Player connected!", socket.id, userId);
 
   if (!cache.players[userId]) {
-    cache.players[userId] = { position: { x: 0, y: 0, z: 0, yRotation: 0 } };
+    const { teams, players } = cache;
+    const teamIds = Object.keys(cache.teams);
+    const playerCountsForTeams = teamIds.map(
+      (teamId) =>
+        Object.values(players).filter((player) => player.teamId === teamId)
+          .length
+    );
+    const teamId = teamIds[indexOfSmallest(playerCountsForTeams)];
+    console.log("Team id", teamId);
+    cache.players[userId] = {
+      position: { x: 0, y: 0, z: 0, yRotation: 0 },
+      teamId,
+    };
 
     socket.broadcast.emit("playerJoin", {
       userId,
@@ -51,7 +72,10 @@ io.on("connection", (socket) => {
     "playerMove",
     (data: { userId: string; position: PlayerPosition }) => {
       if (!cache.players[data.userId]) {
-        cache.players[data.userId] = { position: data.position };
+        cache.players[data.userId] = {
+          ...cache.players[data.userId],
+          position: data.position,
+        };
       }
       cache.players[data.userId].position = data.position;
       socket.broadcast.emit("playerMove", data);

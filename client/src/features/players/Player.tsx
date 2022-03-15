@@ -16,9 +16,11 @@ import { usePlayerMoveListener } from "./usePlayerMoveListener";
 export const Player = ({
   userId,
   initialPlayer,
+  team,
 }: {
   userId: string;
   initialPlayer: Player;
+  team: Team;
 }) => {
   const playerRef = useRef<Mesh | null>(null);
 
@@ -63,6 +65,8 @@ export const Player = ({
     }
   });
 
+  const teamColor = Color3.FromHexString(team.hexColor).toColor4();
+
   return (
     <box
       name="player"
@@ -83,11 +87,11 @@ export const Player = ({
       depth={AVATAR_DEPTH}
       faceColors={[
         Color3.White().toColor4(), // front
-        Color3.Green().toColor4(), // back
-        Color3.Green().toColor4(), // right
-        Color3.Green().toColor4(), // left,
-        Color3.Green().toColor4(), // top or bottom,
-        Color3.Green().toColor4(), // top or bottom,
+        teamColor, // back
+        teamColor, // right
+        teamColor, // left,
+        teamColor, // top or bottom,
+        teamColor, // top or bottom,
       ]}
       faceUV={[
         new Vector4(0, 1, 1, 0),
