@@ -35,8 +35,8 @@ export const App = () => {
             </directionalLight>
             <hemisphericLight
               name="light2"
-              direction={new Vector3(0.2, 1, 0)}
-              intensity={0.5}
+              direction={new Vector3(0, 1, 0)}
+              intensity={0.25}
             />
             <ground
               name="ground"
@@ -51,6 +51,65 @@ export const App = () => {
                 diffuseColor={Color3.FromHexString(PALATTE.light)}
               />
             </ground>
+            <plane
+              name="negative-x-plane"
+              position-x={-10}
+              position-y={2.5}
+              width={20}
+              height={5}
+              sideOrientation={1}
+              rotation={new Vector3(0, Math.PI * 0.5, 0)}
+              checkCollisions
+            />
+            <plane
+              name="positive-x-plane"
+              position-x={10}
+              position-y={2.5}
+              width={20}
+              height={5}
+              sideOrientation={1}
+              rotation={new Vector3(0, Math.PI * 1.5, 0)}
+              checkCollisions
+            />
+            <plane
+              name="positive-z-plane"
+              position-z={10}
+              position-y={2.5}
+              width={20}
+              height={5}
+              sideOrientation={1}
+              rotation={new Vector3(0, Math.PI * 1, 0)}
+              checkCollisions
+            />
+            <plane
+              name="negative-z-plane"
+              position-z={-10}
+              position-y={2.5}
+              width={20}
+              height={5}
+              sideOrientation={1}
+              rotation={new Vector3(0, Math.PI * 0, 0)}
+              checkCollisions
+            >
+              <standardMaterial
+                name="plane-material"
+                diffuseColor={Color3.FromHexString(PALATTE.light)}
+              />
+            </plane>
+            <plane
+              name="positive-y-plane"
+              position-y={5}
+              width={20}
+              height={20}
+              sideOrientation={1}
+              rotation={new Vector3(Math.PI * 0.5, 0, 0)}
+              checkCollisions
+            >
+              <standardMaterial
+                name="plane-material"
+                diffuseColor={Color3.FromHexString(PALATTE.light)}
+              />
+            </plane>
             <Avatar />
             <Players />
           </>
