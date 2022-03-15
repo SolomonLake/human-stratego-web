@@ -80,13 +80,13 @@ export const Player = ({
       }
       onCreated={(box) => box.enableEdgesRendering()}
       edgesWidth={1}
-      edgesColor={new Color4(0, 0, 0, 1)}
+      edgesColor={Color3.FromHexString("#3D405B").toColor4()}
       rotation={new Vector3(0, initialPlayer.position.yRotation, 0)}
       height={AVATAR_HEIGHT}
       width={AVATAR_WIDTH}
       depth={AVATAR_DEPTH}
       faceColors={[
-        Color3.White().toColor4(), // front
+        Color3.FromHexString("#F4F1DE").toColor4(), // front
         teamColor, // back
         teamColor, // right
         teamColor, // left,
@@ -102,8 +102,11 @@ export const Player = ({
         new Vector4(0, 0, 0, 0),
       ]}
     >
-      <standardMaterial name="player-material">
-        <texture url="/images/raccoon-dance.jpg" />
+      <standardMaterial
+        name="player-material"
+        emissiveColor={Color3.FromHexString("#F4F1DE")}
+      >
+        <texture url="/images/raccoon-dance.jpg" level={0.8} />
       </standardMaterial>
     </box>
   );

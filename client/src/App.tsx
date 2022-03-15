@@ -1,4 +1,4 @@
-import { Vector3 } from "@babylonjs/core";
+import { Color3, Vector3 } from "@babylonjs/core";
 import { Engine, Scene } from "react-babylonjs";
 import { Avatar } from "./features/avatar/Avatar";
 import { ResizeEngine } from "./features/resize/ResizeEngine";
@@ -28,13 +28,13 @@ export const App = () => {
               name="light1"
               direction={new Vector3(1, -1, 0)}
               position={new Vector3(-1000, 1000, 0)}
-              intensity={0.5}
+              intensity={0.2}
             >
               <shadowGenerator mapSize={1024} shadowCasters={["player"]} />
             </directionalLight>
             <hemisphericLight
               name="light2"
-              direction={new Vector3(0, -1, 0)}
+              direction={new Vector3(0.2, 1, 0)}
               intensity={0.5}
             />
             <ground
@@ -44,7 +44,12 @@ export const App = () => {
               width={20}
               position={Vector3.Zero()}
               receiveShadows
-            />
+            >
+              <standardMaterial
+                name="groundMaterial"
+                diffuseColor={Color3.FromHexString("#F4F1DE")}
+              />
+            </ground>
             <Avatar />
             <Players />
           </>
