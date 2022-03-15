@@ -18,7 +18,7 @@ const server = app.listen(port);
 
 const cache: ServerCache = {
   players: {},
-  teams: { "1": { hexColor: "#E07A5F" }, "2": { hexColor: "#81B29A" } },
+  teams: { "1": { color: "team1" }, "2": { color: "team2" } },
 };
 
 const io = new Server<ClientToServerEvents, ServerToClientEvents>(server);

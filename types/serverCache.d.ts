@@ -11,7 +11,7 @@ type PlayerMap = {
 };
 
 type Team = {
-  hexColor: string;
+  color: "team1" | "team2";
 };
 
 type TeamMap = { [teamId: string]: Team };

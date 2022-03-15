@@ -4,6 +4,7 @@ import { Avatar } from "./features/avatar/Avatar";
 import { ResizeEngine } from "./features/resize/ResizeEngine";
 import { Players } from "./features/players/Players";
 import { SocketProvider } from "./features/sockets/SocketProvider";
+import { PALATTE } from "./features/theme/theme";
 
 export const App = () => {
   const framesPerSecond = 60;
@@ -47,7 +48,7 @@ export const App = () => {
             >
               <standardMaterial
                 name="groundMaterial"
-                diffuseColor={Color3.FromHexString("#F4F1DE")}
+                diffuseColor={Color3.FromHexString(PALATTE.light)}
               />
             </ground>
             <Avatar />

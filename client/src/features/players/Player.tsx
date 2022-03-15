@@ -11,6 +11,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { useBeforeRender, useScene } from "react-babylonjs";
 import { AVATAR_DEPTH, AVATAR_HEIGHT, AVATAR_WIDTH } from "../avatar/Avatar";
+import { PALATTE } from "../theme/theme";
 import { usePlayerMoveListener } from "./usePlayerMoveListener";
 
 export const Player = ({
@@ -65,7 +66,7 @@ export const Player = ({
     }
   });
 
-  const teamColor = Color3.FromHexString(team.hexColor).toColor4();
+  const teamColor = Color3.FromHexString(PALATTE[team.color]).toColor4();
 
   return (
     <box
@@ -80,13 +81,13 @@ export const Player = ({
       }
       onCreated={(box) => box.enableEdgesRendering()}
       edgesWidth={1}
-      edgesColor={Color3.FromHexString("#3D405B").toColor4()}
+      edgesColor={Color3.FromHexString(PALATTE.dark).toColor4()}
       rotation={new Vector3(0, initialPlayer.position.yRotation, 0)}
       height={AVATAR_HEIGHT}
       width={AVATAR_WIDTH}
       depth={AVATAR_DEPTH}
       faceColors={[
-        Color3.FromHexString("#F4F1DE").toColor4(), // front
+        Color3.FromHexString(PALATTE.light).toColor4(), // front
         teamColor, // back
         teamColor, // right
         teamColor, // left,
@@ -104,7 +105,7 @@ export const Player = ({
     >
       <standardMaterial
         name="player-material"
-        emissiveColor={Color3.FromHexString("#F4F1DE")}
+        emissiveColor={Color3.FromHexString(PALATTE.light)}
       >
         <texture url="/images/raccoon-dance.jpg" level={0.8} />
       </standardMaterial>
