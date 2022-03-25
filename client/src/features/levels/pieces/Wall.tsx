@@ -1,27 +1,29 @@
-import { Color3, Vector3 } from "@babylonjs/core";
+import { Color3, Mesh, Vector3 } from "@babylonjs/core";
 import { PALATTE } from "../../theme/theme";
 
-export const Ceiling = ({
-  widthX,
-  widthZ,
+export const Wall = ({
+  width,
+  height,
   positionX = 0,
   positionZ = 0,
   positionY = 0,
+  rotationY = 0,
 }: {
-  widthX: number;
-  widthZ: number;
+  width: number;
+  height: number;
   positionX?: number;
   positionZ?: number;
   positionY?: number;
+  rotationY?: number;
 }) => {
   return (
     <plane
-      name="positive-y-plane"
+      name="wall-plane"
       position={new Vector3(positionX, positionY, positionZ)}
-      width={widthX}
-      height={widthZ}
-      sideOrientation={1}
-      rotation={new Vector3(Math.PI * 0.5, 0, 0)}
+      width={width}
+      height={height}
+      sideOrientation={Mesh.DOUBLESIDE}
+      rotation={new Vector3(0, rotationY, 0)}
       checkCollisions
     >
       <standardMaterial
