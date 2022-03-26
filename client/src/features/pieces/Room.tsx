@@ -11,6 +11,7 @@ export const Room = ({
   positiveZWall,
   negativeZWall,
   checkCollisions,
+  invertWalls,
 }: {
   size: Vector3;
   position: Vector3;
@@ -19,6 +20,7 @@ export const Room = ({
   positiveZWall?: boolean;
   negativeZWall?: boolean;
   checkCollisions?: boolean;
+  invertWalls?: boolean;
 }) => {
   return (
     <transformNode name="room-transform-node" position={position}>
@@ -27,7 +29,7 @@ export const Room = ({
       {positiveXWall && (
         <Wall
           positionX={size.x / 2}
-          rotationY={Math.PI * 0.5}
+          rotationY={Math.PI * (invertWalls ? 1.5 : 0.5)}
           height={size.y}
           width={size.z}
           checkCollisions={checkCollisions}
@@ -36,7 +38,7 @@ export const Room = ({
       {negativeXWall && (
         <Wall
           positionX={-1 * (size.x / 2)}
-          rotationY={Math.PI * 1.5}
+          rotationY={Math.PI * (invertWalls ? 0.5 : 1.5)}
           height={size.y}
           width={size.z}
           checkCollisions={checkCollisions}
@@ -45,7 +47,7 @@ export const Room = ({
       {positiveZWall && (
         <Wall
           positionZ={size.z / 2}
-          rotationY={Math.PI * 0}
+          rotationY={Math.PI * (invertWalls ? 1 : 0)}
           height={size.y}
           width={size.x}
           checkCollisions={checkCollisions}
@@ -54,7 +56,7 @@ export const Room = ({
       {negativeZWall && (
         <Wall
           positionZ={-1 * (size.z / 2)}
-          rotationY={Math.PI * 1}
+          rotationY={Math.PI * (invertWalls ? 0 : 1)}
           height={size.y}
           width={size.x}
           checkCollisions={checkCollisions}

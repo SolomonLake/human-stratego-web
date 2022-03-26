@@ -1,5 +1,6 @@
 import { Vector3 } from "@babylonjs/core";
 import { Room } from "../../pieces/Room";
+import { Base } from "../../rooms/Base";
 
 export const SquareBaseLayer = ({
   teamBaseXPosition,
@@ -43,13 +44,12 @@ export const SquareBaseLayer = ({
         checkCollisions
       />
       {/* Team Base */}
-      <Room
-        size={new Vector3(teamBaseXSize, height, teamBaseZSize)}
-        position={new Vector3(teamBaseXPosition, roomYPosition, 0)}
-        positiveXWall
-        negativeXWall
-        positiveZWall
-        negativeZWall
+      <Base
+        teamBaseXSize={teamBaseXSize}
+        teamBaseZSize={teamBaseZSize}
+        teamBaseXPosition={teamBaseXPosition}
+        height={height}
+        roomYPosition={roomYPosition}
       />
     </>
   );
