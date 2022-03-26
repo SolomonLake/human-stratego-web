@@ -1,5 +1,5 @@
 import { Color3, Mesh, Vector3 } from "@babylonjs/core";
-import { PALATTE } from "../../theme/theme";
+import { PALATTE } from "../theme/theme";
 
 export const Wall = ({
   width,

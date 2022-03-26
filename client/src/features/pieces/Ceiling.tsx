@@ -1,7 +1,7 @@
 import { Color3, Vector3 } from "@babylonjs/core";
-import { PALATTE } from "../../theme/theme";
+import { PALATTE } from "../theme/theme";
 
-export const Floor = ({
+export const Ceiling = ({
   widthX,
   widthZ,
   positionX = 0,
@@ -15,21 +15,19 @@ export const Floor = ({
   positionY?: number;
 }) => {
   return (
-    <ground
-      name="ground"
-      checkCollisions
-      height={widthZ}
-      width={widthX}
+    <plane
+      name="positive-y-plane"
       position={new Vector3(positionX, positionY, positionZ)}
-      receiveShadows
-      onCreated={(mesh) => mesh.enableEdgesRendering()}
-      edgesWidth={2}
-      edgesColor={Color3.FromHexString(PALATTE.dark).toColor4()}
+      width={widthX}
+      height={widthZ}
+      sideOrientation={1}
+      rotation={new Vector3(Math.PI * 0.5, 0, 0)}
+      checkCollisions
     >
       <standardMaterial
-        name="groundMaterial"
+        name="plane-material"
         diffuseColor={Color3.FromHexString(PALATTE.light)}
       />
-    </ground>
+    </plane>
   );
 };

@@ -5,10 +5,10 @@ import { ResizeEngine } from "./features/resize/ResizeEngine";
 import { Players } from "./features/players/Players";
 import { SocketProvider } from "./features/sockets/SocketProvider";
 import { PALATTE } from "./features/theme/theme";
-import { Ceiling } from "./features/levels/pieces/Ceiling";
-import { Floor } from "./features/levels/pieces/Floor";
+import { Ceiling } from "./features/pieces/Ceiling";
+import { Floor } from "./features/pieces/Floor";
 import { PositionalArrows } from "./dev/positionalArrows/PositionalArrows";
-import { SquareLevel } from "./features/levels/SquareLevel";
+import { SquareLevel } from "./features/levels/square/SquareLevel";
 
 export const App = () => {
   const framesPerSecond = 60;
