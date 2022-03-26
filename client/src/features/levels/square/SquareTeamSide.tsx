@@ -1,8 +1,18 @@
-import { Vector3 } from "@babylonjs/core";
+import { Color3, Vector3 } from "@babylonjs/core";
 import { Room } from "../../pieces/Room";
+import { PALATTE } from "../../theme/theme";
 import { SquareBaseLayer } from "./SquareBaseLayer";
 
-export const SquareTeamSide = ({ xSide }: { xSide: -1 | 1 }) => {
+export const SquareTeamSide = ({
+  team,
+  userMatchesTeam,
+}: {
+  team: Team;
+  userMatchesTeam: boolean;
+}) => {
+  const xSide = team.side;
+  const teamColor3 = Color3.FromHexString(PALATTE[team.color]);
+
   const height = 3;
   const roomYPosition = height / 2;
 
@@ -12,9 +22,9 @@ export const SquareTeamSide = ({ xSide }: { xSide: -1 | 1 }) => {
 
   const neutralCenterXSize = 1;
   const neutralCenterXPosition = xSide * (xLayerSize + neutralCenterXSize / 2);
-  xLayerSize += neutralCenterXSize / 2;
+  xLayerSize += neutralCenterXSize;
 
-  const teamBufferZoneXSize = 3;
+  const teamBufferZoneXSize = 2;
   const teamBufferZoneXPosition =
     xSide * (xLayerSize + teamBufferZoneXSize / 2);
   xLayerSize += teamBufferZoneXSize;
@@ -39,6 +49,7 @@ export const SquareTeamSide = ({ xSide }: { xSide: -1 | 1 }) => {
         positiveZWall
         negativeZWall
         checkCollisions
+        color3={teamColor3}
       />
       <SquareBaseLayer
         teamBaseXPosition={teamBaseXPosition}
@@ -47,6 +58,8 @@ export const SquareTeamSide = ({ xSide }: { xSide: -1 | 1 }) => {
         height={height}
         roomYPosition={roomYPosition}
         teamBaseSideZSize={teamBaseSideZSize}
+        userMatchesTeam={userMatchesTeam}
+        team={team}
       />
       <Room
         size={new Vector3(teamBufferZoneXSize, height, zWidth)}
@@ -54,6 +67,7 @@ export const SquareTeamSide = ({ xSide }: { xSide: -1 | 1 }) => {
         positiveZWall
         negativeZWall
         checkCollisions
+        color3={teamColor3}
       />
       <Room
         size={new Vector3(neutralCenterXSize, height, zWidth)}
@@ -61,6 +75,7 @@ export const SquareTeamSide = ({ xSide }: { xSide: -1 | 1 }) => {
         positiveZWall
         negativeZWall
         checkCollisions
+        color3={teamColor3}
       />
     </>
   );

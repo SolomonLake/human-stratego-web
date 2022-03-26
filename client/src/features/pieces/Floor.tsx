@@ -7,12 +7,14 @@ export const Floor = ({
   positionX = 0,
   positionZ = 0,
   positionY = 0,
+  color3,
 }: {
   widthX: number;
   widthZ: number;
   positionX?: number;
   positionZ?: number;
   positionY?: number;
+  color3: Color3;
 }) => {
   return (
     <ground
@@ -24,12 +26,9 @@ export const Floor = ({
       receiveShadows
       onCreated={(mesh) => mesh.enableEdgesRendering()}
       edgesWidth={2}
-      edgesColor={Color3.FromHexString(PALATTE.dark).toColor4()}
+      edgesColor={Color3.FromHexString(PALATTE.light).toColor4()}
     >
-      <standardMaterial
-        name="groundMaterial"
-        diffuseColor={Color3.FromHexString(PALATTE.light)}
-      />
+      <standardMaterial name="groundMaterial" diffuseColor={color3} />
     </ground>
   );
 };

@@ -1,38 +1,31 @@
 import { Vector3 } from "@babylonjs/core";
+import { useContext } from "react";
 import { Room } from "../../pieces/Room";
+import { InitialServerCacheContext } from "../../serverCache/InitialServerCacheContext";
+import { useUserId } from "../../user/useUserId";
 import { SquareBaseLayer } from "./SquareBaseLayer";
 import { SquareTeamSide } from "./SquareTeamSide";
 
 export const SquareLevel = () => {
-  const height = 3;
-  const roomYPosition = height / 2;
+  const userId = useUserId();
 
-  const zWidth = 30;
+  const cache = useContext(InitialServerCacheContext);
 
-  let xLayerSize = 0;
-  const neutralCenterXSize = 2;
-  xLayerSize += neutralCenterXSize / 2;
+  const userTeamId = cache?.players[userId]?.teamId;
 
-  const teamBufferZoneXSize = 3;
-  const teamBufferZoneXPosition = xLayerSize + teamBufferZoneXSize / 2;
-  xLayerSize += teamBufferZoneXSize;
-
-  const teamBaseXSize = 4;
-  const teamBaseXPosition = xLayerSize + teamBaseXSize / 2;
-  xLayerSize += teamBaseXSize;
-
-  const teamBaseZSize = 4;
-  const teamBaseSideZSize = zWidth / 2 - teamBaseZSize / 2;
-
-  const teamBackXSize = 8;
-  const teamBackXPosition = xLayerSize + teamBackXSize / 2;
+  if (!cache || !userTeamId) {
+    return null;
+  }
 
   return (
     <>
-      {/* Team1 */}
-      <SquareTeamSide xSide={1} />
-      {/* Team2 */}
-      <SquareTeamSide xSide={-1} />
+      {(Object.keys(cache.teams) as TeamId[]).map((teamId: TeamId) => (
+        <SquareTeamSide
+          key={teamId}
+          team={cache.teams[teamId]}
+          userMatchesTeam={userTeamId === teamId}
+        />
+      ))}
     </>
   );
 };

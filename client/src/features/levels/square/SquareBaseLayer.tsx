@@ -1,6 +1,7 @@
-import { Vector3 } from "@babylonjs/core";
+import { Color3, Vector3 } from "@babylonjs/core";
 import { Room } from "../../pieces/Room";
 import { Base } from "../../rooms/Base";
+import { PALATTE } from "../../theme/theme";
 
 export const SquareBaseLayer = ({
   teamBaseXPosition,
@@ -9,6 +10,8 @@ export const SquareBaseLayer = ({
   height,
   roomYPosition,
   teamBaseSideZSize,
+  userMatchesTeam,
+  team,
 }: {
   teamBaseXPosition: number;
   teamBaseXSize: number;
@@ -16,7 +19,11 @@ export const SquareBaseLayer = ({
   height: number;
   roomYPosition: number;
   teamBaseSideZSize: number;
+  userMatchesTeam: boolean;
+  team: Team;
 }) => {
+  const teamColor3 = Color3.FromHexString(PALATTE[team.color]);
+
   return (
     <>
       <Room
@@ -30,6 +37,7 @@ export const SquareBaseLayer = ({
         }
         positiveZWall
         checkCollisions
+        color3={teamColor3}
       />
       <Room
         size={new Vector3(teamBaseXSize, height, teamBaseSideZSize)}
@@ -42,6 +50,7 @@ export const SquareBaseLayer = ({
         }
         negativeZWall
         checkCollisions
+        color3={teamColor3}
       />
       {/* Team Base */}
       <Base
@@ -50,6 +59,8 @@ export const SquareBaseLayer = ({
         teamBaseXPosition={teamBaseXPosition}
         height={height}
         roomYPosition={roomYPosition}
+        userMatchesTeam={userMatchesTeam}
+        team={team}
       />
     </>
   );

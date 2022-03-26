@@ -9,6 +9,7 @@ import { Ceiling } from "./features/pieces/Ceiling";
 import { Floor } from "./features/pieces/Floor";
 import { PositionalArrows } from "./dev/positionalArrows/PositionalArrows";
 import { SquareLevel } from "./features/levels/square/SquareLevel";
+import { InitialServerCacheProvider } from "./features/serverCache/InitialServerCacheProvider";
 
 export const App = () => {
   const framesPerSecond = 60;
@@ -28,7 +29,7 @@ export const App = () => {
         collisionsEnabled
       >
         <SocketProvider>
-          <>
+          <InitialServerCacheProvider>
             <PositionalArrows />
             <directionalLight
               name="light1"
@@ -46,7 +47,7 @@ export const App = () => {
             <SquareLevel />
             <Avatar />
             <Players />
-          </>
+          </InitialServerCacheProvider>
         </SocketProvider>
       </Scene>
     </Engine>

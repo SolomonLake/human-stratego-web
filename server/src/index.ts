@@ -18,7 +18,10 @@ const server = app.listen(port);
 
 const cache: ServerCache = {
   players: {},
-  teams: { "1": { color: "team1" }, "2": { color: "team2" } },
+  teams: {
+    "1": { color: "team1", side: 1 },
+    "2": { color: "team2", side: -1 },
+  },
 };
 
 const io = new Server<ClientToServerEvents, ServerToClientEvents>(server);
@@ -37,7 +40,7 @@ io.on("connection", (socket) => {
 
   if (!cache.players[userId]) {
     const { teams, players } = cache;
-    const teamIds = Object.keys(cache.teams);
+    const teamIds = Object.keys(cache.teams) as TeamId[];
     const playerCountsForTeams = teamIds.map(
       (teamId) =>
         Object.values(players).filter((player) => player.teamId === teamId)

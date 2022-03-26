@@ -73,6 +73,7 @@ export const Players = () => {
         .filter((playerId) => playerId !== userId)
         .map((playerId) => {
           const player = playersState[playerId];
+
           return (
             <Player
               key={playerId}

@@ -9,6 +9,9 @@ export const Wall = ({
   positionY = 0,
   rotationY = 0,
   checkCollisions,
+  collisionGroup = -1,
+  collisionMask = -1,
+  color3,
 }: {
   width: number;
   height: number;
@@ -17,6 +20,9 @@ export const Wall = ({
   positionY?: number;
   rotationY?: number;
   checkCollisions?: boolean;
+  collisionGroup?: number;
+  collisionMask?: number;
+  color3: Color3;
 }) => {
   return (
     <plane
@@ -26,11 +32,10 @@ export const Wall = ({
       height={height}
       rotation={new Vector3(0, rotationY, 0)}
       checkCollisions={checkCollisions}
+      collisionGroup={collisionGroup}
+      collisionMask={collisionMask}
     >
-      <standardMaterial
-        name="plane-material"
-        diffuseColor={Color3.FromHexString(PALATTE.light)}
-      />
+      <standardMaterial name="plane-material" diffuseColor={color3} />
     </plane>
   );
 };

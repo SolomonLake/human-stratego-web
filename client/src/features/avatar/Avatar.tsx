@@ -5,6 +5,7 @@ import { useServerCacheOnce } from "../serverCache/useServerCacheOnce";
 import { useSocket } from "../sockets/useSocket";
 import { useUserId } from "../user/useUserId";
 import { throttle } from "throttle-debounce";
+import { CollisionMask } from "../collision/collision";
 
 export const AVATAR_HEIGHT = 1;
 export const AVATAR_FOREHEAD_HEIGHT = 0.05;
@@ -18,6 +19,7 @@ export const Avatar = () => {
   const cameraRef = useRef<FreeCamera | null>(null);
   const socket = useSocket();
   const userId = useUserId();
+  // const [teamId, setTeamId] = useState<TeamId | undefined>();
 
   const throttleEmitPlayerMove = useCallback(
     throttle(500, ({ x, y, z, yRotation }: PlayerPosition) => {
@@ -40,8 +42,10 @@ export const Avatar = () => {
   const [cameraPosition, setCameraPosition] = useState(CAMERA_POSITION);
 
   useServerCacheOnce((cache) => {
-    if (cache.players[userId]) {
-      setInitialPosition(cache.players[userId].position);
+    const player = cache.players[userId];
+    if (player) {
+      setInitialPosition(player.position);
+      // setTeamId(player.teamId);
     } else {
       throw new Error("No current player in cache...");
     }
@@ -91,6 +95,7 @@ export const Avatar = () => {
       keysDown={[83]}
       keysRight={[68]}
       checkCollisions
+      collisionMask={CollisionMask.Avatar}
       ellipsoidOffset-y={AVATAR_FOREHEAD_HEIGHT}
       position={
         new Vector3(

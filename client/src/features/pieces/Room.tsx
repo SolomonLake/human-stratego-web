@@ -1,4 +1,4 @@
-import { Vector3 } from "@babylonjs/core";
+import { Color3, Vector3 } from "@babylonjs/core";
 import { Ceiling } from "./Ceiling";
 import { Floor } from "./Floor";
 import { Wall } from "./Wall";
@@ -11,7 +11,10 @@ export const Room = ({
   positiveZWall,
   negativeZWall,
   checkCollisions,
+  collisionGroup,
+  collisionMask,
   invertWalls,
+  color3,
 }: {
   size: Vector3;
   position: Vector3;
@@ -20,11 +23,19 @@ export const Room = ({
   positiveZWall?: boolean;
   negativeZWall?: boolean;
   checkCollisions?: boolean;
+  collisionGroup?: number;
+  collisionMask?: number;
   invertWalls?: boolean;
+  color3: Color3;
 }) => {
   return (
     <transformNode name="room-transform-node" position={position}>
-      <Floor widthX={size.x} widthZ={size.z} positionY={-1 * (size.y / 2)} />
+      <Floor
+        widthX={size.x}
+        widthZ={size.z}
+        positionY={-1 * (size.y / 2)}
+        color3={color3}
+      />
       <Ceiling widthX={size.x} widthZ={size.z} positionY={size.y / 2} />
       {positiveXWall && (
         <Wall
@@ -33,6 +44,9 @@ export const Room = ({
           height={size.y}
           width={size.z}
           checkCollisions={checkCollisions}
+          collisionGroup={collisionGroup}
+          collisionMask={collisionMask}
+          color3={color3}
         />
       )}
       {negativeXWall && (
@@ -42,6 +56,9 @@ export const Room = ({
           height={size.y}
           width={size.z}
           checkCollisions={checkCollisions}
+          collisionGroup={collisionGroup}
+          collisionMask={collisionMask}
+          color3={color3}
         />
       )}
       {positiveZWall && (
@@ -51,6 +68,9 @@ export const Room = ({
           height={size.y}
           width={size.x}
           checkCollisions={checkCollisions}
+          collisionGroup={collisionGroup}
+          collisionMask={collisionMask}
+          color3={color3}
         />
       )}
       {negativeZWall && (
@@ -60,6 +80,9 @@ export const Room = ({
           height={size.y}
           width={size.x}
           checkCollisions={checkCollisions}
+          collisionGroup={collisionGroup}
+          collisionMask={collisionMask}
+          color3={color3}
         />
       )}
     </transformNode>
