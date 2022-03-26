@@ -8,6 +8,7 @@ export const Wall = ({
   positionZ = 0,
   positionY = 0,
   rotationY = 0,
+  checkCollisions,
 }: {
   width: number;
   height: number;
@@ -15,6 +16,7 @@ export const Wall = ({
   positionZ?: number;
   positionY?: number;
   rotationY?: number;
+  checkCollisions?: boolean;
 }) => {
   return (
     <plane
@@ -22,9 +24,8 @@ export const Wall = ({
       position={new Vector3(positionX, positionY, positionZ)}
       width={width}
       height={height}
-      sideOrientation={Mesh.DOUBLESIDE}
       rotation={new Vector3(0, rotationY, 0)}
-      checkCollisions
+      checkCollisions={checkCollisions}
     >
       <standardMaterial
         name="plane-material"

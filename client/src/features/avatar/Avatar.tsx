@@ -105,7 +105,7 @@ export const Avatar = () => {
       }
       applyGravity
       speed={0.25}
-      minZ={0}
+      minZ={0.01}
     ></freeCamera>
   );
 };

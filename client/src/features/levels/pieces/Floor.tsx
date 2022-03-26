@@ -22,6 +22,9 @@ export const Floor = ({
       width={widthX}
       position={new Vector3(positionX, positionY, positionZ)}
       receiveShadows
+      onCreated={(mesh) => mesh.enableEdgesRendering()}
+      edgesWidth={2}
+      edgesColor={Color3.FromHexString(PALATTE.dark).toColor4()}
     >
       <standardMaterial
         name="groundMaterial"

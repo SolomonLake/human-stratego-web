@@ -10,6 +10,7 @@ export const Room = ({
   negativeXWall,
   positiveZWall,
   negativeZWall,
+  checkCollisions,
 }: {
   size: Vector3;
   position: Vector3;
@@ -17,6 +18,7 @@ export const Room = ({
   negativeXWall?: boolean;
   positiveZWall?: boolean;
   negativeZWall?: boolean;
+  checkCollisions?: boolean;
 }) => {
   return (
     <transformNode name="room-transform-node" position={position}>
@@ -28,21 +30,35 @@ export const Room = ({
           rotationY={Math.PI * 0.5}
           height={size.y}
           width={size.z}
+          checkCollisions={checkCollisions}
         />
       )}
       {negativeXWall && (
         <Wall
           positionX={-1 * (size.x / 2)}
-          rotationY={Math.PI * 0.5}
+          rotationY={Math.PI * 1.5}
           height={size.y}
           width={size.z}
+          checkCollisions={checkCollisions}
         />
       )}
       {positiveZWall && (
-        <Wall positionZ={size.z / 2} height={size.y} width={size.x} />
+        <Wall
+          positionZ={size.z / 2}
+          rotationY={Math.PI * 0}
+          height={size.y}
+          width={size.x}
+          checkCollisions={checkCollisions}
+        />
       )}
       {negativeZWall && (
-        <Wall positionZ={-1 * (size.z / 2)} height={size.y} width={size.x} />
+        <Wall
+          positionZ={-1 * (size.z / 2)}
+          rotationY={Math.PI * 1}
+          height={size.y}
+          width={size.x}
+          checkCollisions={checkCollisions}
+        />
       )}
     </transformNode>
   );
