@@ -36,7 +36,7 @@ export const SquareTeamSide = ({
   const teamBaseZSize = 4;
   const teamBaseSideZSize = zWidth / 2 - teamBaseZSize / 2;
 
-  const teamBackXSize = 8;
+  const teamBackXSize = 20;
   const teamBackXPosition = xSide * (xLayerSize + teamBackXSize / 2);
 
   return (
@@ -75,7 +75,7 @@ export const SquareTeamSide = ({
         positiveZWall
         negativeZWall
         checkCollisions
-        color3={teamColor3}
+        color3={Color3.FromHexString(PALATTE.light)}
       />
     </>
   );

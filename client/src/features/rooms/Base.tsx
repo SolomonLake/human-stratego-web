@@ -42,7 +42,7 @@ export const Base = ({
           : CollisionGroup.CollideWithAll
       }
       color3={teamColor3}
-      wallVisibility={userMatchesTeam ? 0.5 : 1}
+      wallVisibility={userMatchesTeam ? 0.4 : 1}
       emissiveWalls
     />
   );

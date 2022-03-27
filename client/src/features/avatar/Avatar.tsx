@@ -109,7 +109,7 @@ export const Avatar = () => {
         new Vector3(AVATAR_WIDTH / 2, AVATAR_HEIGHT / 2, AVATAR_DEPTH / 2)
       }
       applyGravity
-      speed={0.25}
+      speed={0.1}
       minZ={0.01}
     ></freeCamera>
   );
