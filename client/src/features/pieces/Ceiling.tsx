@@ -7,12 +7,14 @@ export const Ceiling = ({
   positionX = 0,
   positionZ = 0,
   positionY = 0,
+  color3,
 }: {
   widthX: number;
   widthZ: number;
   positionX?: number;
   positionZ?: number;
   positionY?: number;
+  color3: Color3;
 }) => {
   return (
     <plane
@@ -24,10 +26,7 @@ export const Ceiling = ({
       rotation={new Vector3(Math.PI * 0.5, 0, 0)}
       checkCollisions
     >
-      <standardMaterial
-        name="plane-material"
-        diffuseColor={Color3.FromHexString(PALATTE.light)}
-      />
+      <standardMaterial name="plane-material" diffuseColor={color3} />
     </plane>
   );
 };

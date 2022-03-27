@@ -12,6 +12,8 @@ export const Wall = ({
   collisionGroup = -1,
   collisionMask = -1,
   color3,
+  visibility = 1,
+  emissive,
 }: {
   width: number;
   height: number;
@@ -23,6 +25,8 @@ export const Wall = ({
   collisionGroup?: number;
   collisionMask?: number;
   color3: Color3;
+  visibility?: number;
+  emissive?: boolean;
 }) => {
   return (
     <plane
@@ -34,8 +38,14 @@ export const Wall = ({
       checkCollisions={checkCollisions}
       collisionGroup={collisionGroup}
       collisionMask={collisionMask}
+      sideOrientation={Mesh.DOUBLESIDE}
+      visibility={visibility}
     >
-      <standardMaterial name="plane-material" diffuseColor={color3} />
+      <standardMaterial
+        name="plane-material"
+        diffuseColor={color3}
+        emissiveColor={emissive ? color3 : undefined}
+      />
     </plane>
   );
 };

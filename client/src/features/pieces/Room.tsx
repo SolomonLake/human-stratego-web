@@ -15,6 +15,8 @@ export const Room = ({
   collisionMask,
   invertWalls,
   color3,
+  wallVisibility,
+  emissiveWalls,
 }: {
   size: Vector3;
   position: Vector3;
@@ -27,6 +29,8 @@ export const Room = ({
   collisionMask?: number;
   invertWalls?: boolean;
   color3: Color3;
+  wallVisibility?: number;
+  emissiveWalls?: boolean;
 }) => {
   return (
     <transformNode name="room-transform-node" position={position}>
@@ -36,7 +40,12 @@ export const Room = ({
         positionY={-1 * (size.y / 2)}
         color3={color3}
       />
-      <Ceiling widthX={size.x} widthZ={size.z} positionY={size.y / 2} />
+      <Ceiling
+        widthX={size.x}
+        widthZ={size.z}
+        positionY={size.y / 2}
+        color3={color3}
+      />
       {positiveXWall && (
         <Wall
           positionX={size.x / 2}
@@ -47,6 +56,8 @@ export const Room = ({
           collisionGroup={collisionGroup}
           collisionMask={collisionMask}
           color3={color3}
+          visibility={wallVisibility}
+          emissive={emissiveWalls}
         />
       )}
       {negativeXWall && (
@@ -59,6 +70,8 @@ export const Room = ({
           collisionGroup={collisionGroup}
           collisionMask={collisionMask}
           color3={color3}
+          visibility={wallVisibility}
+          emissive={emissiveWalls}
         />
       )}
       {positiveZWall && (
@@ -71,6 +84,8 @@ export const Room = ({
           collisionGroup={collisionGroup}
           collisionMask={collisionMask}
           color3={color3}
+          visibility={wallVisibility}
+          emissive={emissiveWalls}
         />
       )}
       {negativeZWall && (
@@ -83,6 +98,8 @@ export const Room = ({
           collisionGroup={collisionGroup}
           collisionMask={collisionMask}
           color3={color3}
+          visibility={wallVisibility}
+          emissive={emissiveWalls}
         />
       )}
     </transformNode>

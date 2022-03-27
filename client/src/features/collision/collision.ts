@@ -1,8 +1,8 @@
 export enum CollisionGroup {
-  CollideWithNonMasks = -1,
+  CollideWithAll = -1,
   CollideWithAvatarBomb = 1,
   CollideWithAvatar = 2,
-  CollideWithAll = 0,
+  CollideWithNone = 0,
 }
 
 export enum CollisionMask {

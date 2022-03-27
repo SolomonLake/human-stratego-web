@@ -38,10 +38,12 @@ export const Base = ({
       checkCollisions
       collisionGroup={
         userMatchesTeam
-          ? CollisionGroup.CollideWithNonMasks
+          ? CollisionGroup.CollideWithNone
           : CollisionGroup.CollideWithAll
       }
       color3={teamColor3}
+      wallVisibility={userMatchesTeam ? 0.5 : 1}
+      emissiveWalls
     />
   );
 };
