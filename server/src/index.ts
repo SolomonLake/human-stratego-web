@@ -16,15 +16,55 @@ app.get("/api/hey", (req, res) => res.send({ message: "ho!" }));
 const port = process.env.PORT || 8080;
 const server = app.listen(port);
 
+const initialCardCounts = {
+  bomb: 2,
+  scout: 6,
+  diffuser: 0,
+  footpad: 0,
+  thief: 0,
+  agent: 0,
+  spy: 0,
+  mastermind: 0,
+  assassin: 0,
+  battlemaster: 0,
+  councillor: 0,
+};
+
 const cache: ServerCache = {
   players: {},
   teams: {
-    "1": { color: "team1", side: 1 },
-    "2": { color: "team2", side: -1 },
+    "1": {
+      color: "team1",
+      side: 1,
+      cardCounts: initialCardCounts,
+    },
+    "2": { color: "team2", side: -1, cardCounts: initialCardCounts },
   },
 };
 
-const io = new Server<ClientToServerEvents, ServerToClientEvents>(server);
+function cardForPlayer(cardCounts: CardCounts): CardId {
+  const orderToGive: CardId[] = [
+    "scout",
+    "diffuser",
+    "footpad",
+    "thief",
+    "agent",
+    "spy",
+    "mastermind",
+    "bomb",
+    "assassin",
+    "battlemaster",
+    "councillor",
+  ];
+  for (let i = 0; i < orderToGive.length; i++) {
+    const cardId = orderToGive[i];
+    if (cardCounts[cardId] > 0) {
+      return cardId;
+    }
+  }
+  // TODO: handle no cards left in team
+  throw new Error("No cards to give");
+}
 
 function indexOfSmallest(a: any[]) {
   let lowest = a[Math.floor(Math.random() * a.length)];
@@ -33,6 +73,8 @@ function indexOfSmallest(a: any[]) {
   }
   return lowest;
 }
+
+const io = new Server<ClientToServerEvents, ServerToClientEvents>(server);
 
 io.on("connection", (socket) => {
   const userId = socket.handshake.auth.userId;
@@ -47,9 +89,12 @@ io.on("connection", (socket) => {
           .length
     );
     const teamId = teamIds[indexOfSmallest(playerCountsForTeams)];
+    const teamCardIds = Object.keys(teams[teamId].cardCounts);
+    const cardId = cardForPlayer(teams[teamId].cardCounts);
     console.log("Team id", teamId);
     cache.players[userId] = {
       position: { x: 0, y: 0, z: 0, yRotation: 0 },
+      cardId,
       teamId,
     };
 

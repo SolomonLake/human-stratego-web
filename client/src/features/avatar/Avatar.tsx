@@ -6,6 +6,9 @@ import { useSocket } from "../sockets/useSocket";
 import { useUserId } from "../user/useUserId";
 import { throttle } from "throttle-debounce";
 import { CollisionMask } from "../collision/collision";
+import { PALATTE } from "../theme/theme";
+import { Control } from "@babylonjs/gui";
+import { CARDS } from "../cards/cards";
 
 export const AVATAR_HEIGHT = 1;
 export const AVATAR_FOREHEAD_HEIGHT = 0.05;
@@ -39,12 +42,15 @@ export const Avatar = () => {
   const [initialPosition, setInitialPosition] =
     useState<PlayerPosition>(CAMERA_POSITION);
 
+  const [cardId, setCardId] = useState<CardId | undefined>(undefined);
+
   const [cameraPosition, setCameraPosition] = useState(CAMERA_POSITION);
 
   useServerCacheOnce((cache) => {
     const player = cache.players[userId];
     if (player) {
       setInitialPosition(player.position);
+      setCardId(player.cardId);
       // setTeamId(player.teamId);
     } else {
       throw new Error("No current player in cache...");
@@ -87,30 +93,64 @@ export const Avatar = () => {
   });
 
   return (
-    <freeCamera
-      name="camera1"
-      ref={cameraRef}
-      keysUp={[87]}
-      keysLeft={[65]}
-      keysDown={[83]}
-      keysRight={[68]}
-      checkCollisions
-      collisionMask={CollisionMask.Avatar}
-      ellipsoidOffset-y={AVATAR_FOREHEAD_HEIGHT}
-      position={
-        new Vector3(
-          initialPosition.x,
-          initialPosition.y + AVATAR_HEIGHT,
-          initialPosition.z
-        )
-      }
-      rotation={new Vector3(0, initialPosition.yRotation, 0)}
-      ellipsoid={
-        new Vector3(AVATAR_WIDTH / 2, AVATAR_HEIGHT / 2, AVATAR_DEPTH / 2)
-      }
-      applyGravity
-      speed={0.1}
-      minZ={0.01}
-    ></freeCamera>
+    <>
+      <freeCamera
+        name="camera1"
+        ref={cameraRef}
+        keysUp={[87]}
+        keysLeft={[65]}
+        keysDown={[83]}
+        keysRight={[68]}
+        checkCollisions
+        collisionMask={CollisionMask.Avatar}
+        ellipsoidOffset-y={AVATAR_FOREHEAD_HEIGHT}
+        position={
+          new Vector3(
+            initialPosition.x,
+            initialPosition.y + AVATAR_HEIGHT,
+            initialPosition.z
+          )
+        }
+        rotation={new Vector3(0, initialPosition.yRotation, 0)}
+        ellipsoid={
+          new Vector3(AVATAR_WIDTH / 2, AVATAR_HEIGHT / 2, AVATAR_DEPTH / 2)
+        }
+        applyGravity
+        speed={0.1}
+        minZ={0.01}
+      ></freeCamera>
+
+      <adtFullscreenUi name="fullscreen-ui">
+        {/* 👆✖👁️‍🗨️🦝♠🔘 */}
+        <textBlock
+          name="crosshair-ui"
+          text="✖"
+          scaleX={0.4}
+          scaleY={0.4}
+          color={PALATTE.light}
+        />
+        {cardId && (
+          <rectangle
+            name="card-ui"
+            width={0.1}
+            height={0.25}
+            color={PALATTE.team1}
+            cornerRadius={20}
+            background={PALATTE.light}
+            verticalAlignment={Control.VERTICAL_ALIGNMENT_TOP}
+            horizontalAlignment={Control.HORIZONTAL_ALIGNMENT_LEFT}
+            paddingTop={"15px"}
+            paddingLeft={"15px"}
+            thickness={6}
+          >
+            <textBlock
+              name="card-text-ui"
+              text={CARDS[cardId].displayCharacter}
+              fontSize={60}
+            />
+          </rectangle>
+        )}
+      </adtFullscreenUi>
+    </>
   );
 };
