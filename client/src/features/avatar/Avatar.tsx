@@ -160,7 +160,16 @@ export const Avatar = () => {
 
       <adtFullscreenUi name="fullscreen-ui">
         {showTeamCardPanel ? (
-          <TeamCardPanelUI />
+          <rectangle
+            name="card-selector-background"
+            width={0.7}
+            height={0.8}
+            background={PALATTE.dark}
+            thickness={0}
+            cornerRadius={20}
+          >
+            <TeamCardPanelUI />
+          </rectangle>
         ) : (
           <>
             {/* 👆✖👁️‍🗨️🦝♠🔘 */}
