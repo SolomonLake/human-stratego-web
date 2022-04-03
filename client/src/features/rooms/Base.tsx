@@ -1,6 +1,10 @@
-import { Color3, Vector3 } from "@babylonjs/core";
+import { Color3, Vector3, Mesh } from "@babylonjs/core";
+import { Control } from "@babylonjs/gui";
+import { CARDS } from "../cards/cards";
 import { CollisionGroup } from "../collision/collision";
 import { Room } from "../pieces/Room";
+import { Wall } from "../pieces/Wall";
+import { TeamCardPanel } from "../teamCardPanel/TeamCardPanel";
 import { PALATTE } from "../theme/theme";
 
 export const Base = ({
@@ -24,9 +28,11 @@ export const Base = ({
 }) => {
   const teamColor3 = Color3.FromHexString(PALATTE[team.color]);
 
+  const size = new Vector3(teamBaseXSize, height, teamBaseZSize);
+
   return (
     <Room
-      size={new Vector3(teamBaseXSize, height, teamBaseZSize)}
+      size={size}
       position={
         new Vector3(teamBaseXPosition, roomYPosition, teamBaseZPosition)
       }
@@ -44,6 +50,8 @@ export const Base = ({
       color3={teamColor3}
       wallVisibility={userMatchesTeam ? 0.4 : 1}
       emissiveWalls
-    />
+    >
+      <TeamCardPanel roomSize={size} />
+    </Room>
   );
 };

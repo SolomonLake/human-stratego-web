@@ -1,9 +1,11 @@
-import { Color3, Vector3 } from "@babylonjs/core";
+import { Color3, TransformNode, Vector3 } from "@babylonjs/core";
+import { BabylonNode } from "react-babylonjs";
 import { Ceiling } from "./Ceiling";
 import { Floor } from "./Floor";
 import { Wall } from "./Wall";
 
 export const Room = ({
+  children,
   size,
   position,
   positiveXWall,
@@ -17,7 +19,7 @@ export const Room = ({
   color3,
   wallVisibility,
   emissiveWalls,
-}: {
+}: BabylonNode<TransformNode> & {
   size: Vector3;
   position: Vector3;
   positiveXWall?: boolean;
@@ -34,6 +36,7 @@ export const Room = ({
 }) => {
   return (
     <transformNode name="room-transform-node" position={position}>
+      {children}
       <Floor
         widthX={size.x}
         widthZ={size.z}

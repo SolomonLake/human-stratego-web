@@ -1,6 +1,6 @@
-import { FreeCamera, Vector3 } from "@babylonjs/core";
+import { FreeCamera, Ray, RayHelper, Vector3 } from "@babylonjs/core";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useBeforeRender, useEngine } from "react-babylonjs";
+import { useBeforeRender, useEngine, useScene } from "react-babylonjs";
 import { useServerCacheOnce } from "../serverCache/useServerCacheOnce";
 import { useSocket } from "../sockets/useSocket";
 import { useUserId } from "../user/useUserId";
@@ -9,6 +9,7 @@ import { CollisionMask } from "../collision/collision";
 import { PALATTE } from "../theme/theme";
 import { Control } from "@babylonjs/gui";
 import { CARDS } from "../cards/cards";
+import { TeamCardPanelUI } from "../teamCardPanel/TeamCardPanelUI";
 
 export const AVATAR_HEIGHT = 1;
 export const AVATAR_FOREHEAD_HEIGHT = 0.05;
@@ -19,6 +20,7 @@ const CAMERA_POSITION = { x: 0, y: 0, z: 0, yRotation: 0 };
 
 export const Avatar = () => {
   const engine = useEngine();
+  const scene = useScene();
   const cameraRef = useRef<FreeCamera | null>(null);
   const socket = useSocket();
   const userId = useUserId();
@@ -92,6 +94,42 @@ export const Avatar = () => {
     }
   });
 
+  const [showTeamCardPanel, setShowTeamCardPanel] = useState(false);
+
+  useEffect(() => {
+    const canvas = engine?.getRenderingCanvas();
+    const onMouseDown = (ev: MouseEvent) => {
+      const camera = cameraRef.current;
+      if (camera && scene) {
+        const target = camera.getTarget().subtract(camera.position);
+        const cameraRay = new Ray(camera.position, target);
+        const pickInfo = scene.pickWithRay(cameraRay, (mesh) => {
+          // return mesh == mazeMesh;
+          return true;
+        });
+        if (pickInfo?.pickedMesh?.name === "card-selector-plane") {
+          setShowTeamCardPanel(true);
+        }
+        console.log(
+          "PICK INFO",
+          target,
+          pickInfo,
+          pickInfo?.pickedMesh?.name,
+          pickInfo?.getTextureCoordinates()
+        );
+      }
+    };
+    if (cameraRef.current && scene && canvas) {
+      canvas.addEventListener("mousedown", onMouseDown);
+    }
+
+    return () => {
+      if (onMouseDown && canvas) {
+        canvas.removeEventListener("mousedown", onMouseDown);
+      }
+    };
+  }, [cameraRef, scene]);
+
   return (
     <>
       <freeCamera
@@ -121,34 +159,40 @@ export const Avatar = () => {
       ></freeCamera>
 
       <adtFullscreenUi name="fullscreen-ui">
-        {/* 👆✖👁️‍🗨️🦝♠🔘 */}
-        <textBlock
-          name="crosshair-ui"
-          text="✖"
-          scaleX={0.4}
-          scaleY={0.4}
-          color={PALATTE.light}
-        />
-        {cardId && (
-          <rectangle
-            name="card-ui"
-            width={0.1}
-            height={0.25}
-            color={PALATTE.team1}
-            cornerRadius={20}
-            background={PALATTE.light}
-            verticalAlignment={Control.VERTICAL_ALIGNMENT_TOP}
-            horizontalAlignment={Control.HORIZONTAL_ALIGNMENT_LEFT}
-            paddingTop={"15px"}
-            paddingLeft={"15px"}
-            thickness={6}
-          >
+        {showTeamCardPanel ? (
+          <TeamCardPanelUI />
+        ) : (
+          <>
+            {/* 👆✖👁️‍🗨️🦝♠🔘 */}
             <textBlock
-              name="card-text-ui"
-              text={CARDS[cardId].displayCharacter}
-              fontSize={60}
+              name="crosshair-ui"
+              text="✖"
+              scaleX={0.4}
+              scaleY={0.4}
+              color={PALATTE.light}
             />
-          </rectangle>
+            {cardId && (
+              <rectangle
+                name="card-ui"
+                width={0.1}
+                height={0.25}
+                color={PALATTE.team1}
+                cornerRadius={20}
+                background={PALATTE.light}
+                verticalAlignment={Control.VERTICAL_ALIGNMENT_TOP}
+                horizontalAlignment={Control.HORIZONTAL_ALIGNMENT_LEFT}
+                paddingTop={"15px"}
+                paddingLeft={"15px"}
+                thickness={6}
+              >
+                <textBlock
+                  name="card-text-ui"
+                  text={CARDS[cardId].displayCharacter}
+                  fontSize={60}
+                />
+              </rectangle>
+            )}
+          </>
         )}
       </adtFullscreenUi>
     </>

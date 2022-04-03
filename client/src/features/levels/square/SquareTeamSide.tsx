@@ -13,7 +13,7 @@ export const SquareTeamSide = ({
   const xSide = team.side;
   const teamColor3 = Color3.FromHexString(PALATTE[team.color]);
 
-  const height = 3;
+  const height = 2.5;
   const roomYPosition = height / 2;
 
   const zWidth = 30;

@@ -1,15 +1,14 @@
 type CardCounts = {
-  bomb: number;
   scout: number;
   diffuser: number;
   footpad: number;
   thief: number;
   agent: number;
   spy: number;
-  mastermind: number;
   assassin: number;
   battlemaster: number;
   councillor: number;
+  bomb: number;
 };
 
 type CardId = keyof CardCounts;

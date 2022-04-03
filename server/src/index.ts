@@ -17,17 +17,16 @@ const port = process.env.PORT || 8080;
 const server = app.listen(port);
 
 const initialCardCounts = {
-  bomb: 2,
   scout: 6,
   diffuser: 0,
   footpad: 0,
   thief: 0,
   agent: 0,
   spy: 0,
-  mastermind: 0,
   assassin: 0,
   battlemaster: 0,
   councillor: 0,
+  bomb: 2,
 };
 
 const cache: ServerCache = {
@@ -50,7 +49,6 @@ function cardForPlayer(cardCounts: CardCounts): CardId {
     "thief",
     "agent",
     "spy",
-    "mastermind",
     "bomb",
     "assassin",
     "battlemaster",
