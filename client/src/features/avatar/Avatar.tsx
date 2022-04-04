@@ -10,6 +10,7 @@ import { PALATTE } from "../theme/theme";
 import { Control } from "@babylonjs/gui";
 import { CARDS } from "../cards/cards";
 import { TeamCardPanelUI } from "../teamCardPanel/TeamCardPanelUI";
+import { CardUI } from "../cards/CardUI";
 
 export const AVATAR_HEIGHT = 1;
 export const AVATAR_FOREHEAD_HEIGHT = 0.05;
@@ -47,6 +48,8 @@ export const Avatar = () => {
   const [cardId, setCardId] = useState<CardId | undefined>(undefined);
 
   const [cameraPosition, setCameraPosition] = useState(CAMERA_POSITION);
+
+  const [showTeamCardPanel, setShowTeamCardPanel] = useState(false);
 
   useServerCacheOnce((cache) => {
     const player = cache.players[userId];
@@ -94,8 +97,6 @@ export const Avatar = () => {
     }
   });
 
-  const [showTeamCardPanel, setShowTeamCardPanel] = useState(false);
-
   useEffect(() => {
     const canvas = engine?.getRenderingCanvas();
     const onMouseDown = (ev: MouseEvent) => {
@@ -109,6 +110,7 @@ export const Avatar = () => {
         });
         if (pickInfo?.pickedMesh?.name === "card-selector-plane") {
           setShowTeamCardPanel(true);
+          document.exitPointerLock();
         }
         console.log(
           "PICK INFO",
@@ -168,7 +170,7 @@ export const Avatar = () => {
             thickness={0}
             cornerRadius={20}
           >
-            <TeamCardPanelUI />
+            <TeamCardPanelUI clickable />
           </rectangle>
         ) : (
           <>
@@ -182,23 +184,17 @@ export const Avatar = () => {
             />
             {cardId && (
               <rectangle
-                name="card-ui"
                 width={0.1}
                 height={0.25}
-                color={PALATTE.team1}
-                cornerRadius={20}
-                background={PALATTE.light}
                 verticalAlignment={Control.VERTICAL_ALIGNMENT_TOP}
                 horizontalAlignment={Control.HORIZONTAL_ALIGNMENT_LEFT}
-                paddingTop={"15px"}
-                paddingLeft={"15px"}
-                thickness={6}
+                paddingTop={"20px"}
+                paddingLeft={"10px"}
+                paddingRight={"10px"}
+                paddingBottom={"20px"}
+                thickness={0}
               >
-                <textBlock
-                  name="card-text-ui"
-                  text={CARDS[cardId].displayCharacter}
-                  fontSize={60}
-                />
+                <CardUI cardId={cardId} />
               </rectangle>
             )}
           </>

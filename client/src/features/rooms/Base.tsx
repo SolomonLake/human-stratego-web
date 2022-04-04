@@ -4,7 +4,7 @@ import { CARDS } from "../cards/cards";
 import { CollisionGroup } from "../collision/collision";
 import { Room } from "../pieces/Room";
 import { Wall } from "../pieces/Wall";
-import { TeamCardPanel } from "../teamCardPanel/TeamCardPanel";
+import { TeamCardPanelWall } from "../teamCardPanel/TeamCardPanelWall";
 import { PALATTE } from "../theme/theme";
 
 export const Base = ({
@@ -51,7 +51,7 @@ export const Base = ({
       wallVisibility={userMatchesTeam ? 0.4 : 1}
       emissiveWalls
     >
-      <TeamCardPanel roomSize={size} />
+      <TeamCardPanelWall roomSize={size} />
     </Room>
   );
 };

@@ -4,7 +4,7 @@ import { CARDS } from "../cards/cards";
 import { PALATTE } from "../theme/theme";
 import { TeamCardPanelUI } from "./TeamCardPanelUI";
 
-export const TeamCardPanel = ({ roomSize }: { roomSize: Vector3 }) => {
+export const TeamCardPanelWall = ({ roomSize }: { roomSize: Vector3 }) => {
   return (
     <plane
       name="card-selector-plane"
