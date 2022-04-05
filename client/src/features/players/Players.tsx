@@ -1,5 +1,5 @@
 import { useEffect, useReducer, useState } from "react";
-import { useServerCacheOnce } from "../serverCache/useServerCacheOnce";
+import { useCacheStore } from "../cache/useCache";
 import { useSocket } from "../sockets/useSocket";
 import { useUserId } from "../user/useUserId";
 import { Player } from "./Player";
@@ -44,10 +44,14 @@ export const Players = () => {
   const socket = useSocket();
   const userId = useUserId();
 
-  useServerCacheOnce((cache) => {
-    dispatch({ type: "player/playersReceived", players: cache.players });
-    setTeams(cache.teams);
-  });
+  const { cache } = useCacheStore();
+
+  useEffect(() => {
+    if (cache) {
+      dispatch({ type: "player/playersReceived", players: cache.players });
+      setTeams(cache.teams);
+    }
+  }, [cache]);
 
   useEffect(() => {
     const onPlayerJoin = (ev: PlayerJoinEvent) => {

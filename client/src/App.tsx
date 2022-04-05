@@ -9,7 +9,7 @@ import { Ceiling } from "./features/pieces/Ceiling";
 import { Floor } from "./features/pieces/Floor";
 import { PositionalArrows } from "./dev/positionalArrows/PositionalArrows";
 import { SquareLevel } from "./features/levels/square/SquareLevel";
-import { InitialServerCacheProvider } from "./features/serverCache/InitialServerCacheProvider";
+import { CacheProvider } from "./features/cache/CacheProvider";
 import { Control } from "@babylonjs/gui";
 
 export const App = () => {
@@ -30,13 +30,13 @@ export const App = () => {
         collisionsEnabled
       >
         <SocketProvider>
-          <InitialServerCacheProvider>
+          <CacheProvider>
             <PositionalArrows />
             <directionalLight
               name="light1"
               direction={new Vector3(1, -1, 0.5)}
               position={new Vector3(-1000, 1000, -1000)}
-              intensity={0.2}
+              intensity={0.25}
             >
               <shadowGenerator mapSize={1024} shadowCasters={["player"]} />
             </directionalLight>
@@ -48,7 +48,7 @@ export const App = () => {
             <SquareLevel />
             <Avatar />
             <Players />
-          </InitialServerCacheProvider>
+          </CacheProvider>
         </SocketProvider>
       </Scene>
     </Engine>

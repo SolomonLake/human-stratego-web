@@ -26,7 +26,7 @@ export const Floor = ({
       receiveShadows
       onCreated={(mesh) => mesh.enableEdgesRendering()}
       edgesWidth={2}
-      edgesColor={Color3.FromHexString(PALATTE.light).toColor4()}
+      edgesColor={Color3.FromHexString(PALATTE.accent).toColor4()}
     >
       <standardMaterial name="groundMaterial" diffuseColor={color3} />
     </ground>

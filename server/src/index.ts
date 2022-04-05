@@ -89,6 +89,8 @@ io.on("connection", (socket) => {
     const teamId = teamIds[indexOfSmallest(playerCountsForTeams)];
     const teamCardIds = Object.keys(teams[teamId].cardCounts);
     const cardId = cardForPlayer(teams[teamId].cardCounts);
+
+    cache.teams[teamId].cardCounts[cardId] -= 1;
     console.log("Team id", teamId);
     cache.players[userId] = {
       position: { x: 0, y: 0, z: 0, yRotation: 0 },
@@ -114,17 +116,22 @@ io.on("connection", (socket) => {
       disconnectedAt,
     });
   });
+
   socket.on(
     "playerMove",
     (data: { userId: string; position: PlayerPosition }) => {
-      if (!cache.players[data.userId]) {
-        cache.players[data.userId] = {
-          ...cache.players[data.userId],
-          position: data.position,
-        };
-      }
       cache.players[data.userId].position = data.position;
       socket.broadcast.emit("playerMove", data);
     }
   );
+  socket.on("playerCardChange", (data: { userId: string; cardId: CardId }) => {
+    const { cardId: currentCardId, teamId } = cache.players[data.userId];
+    if (cache.teams[teamId].cardCounts[data.cardId] > 0) {
+      cache.teams[teamId].cardCounts[data.cardId] -= 1;
+      cache.teams[teamId].cardCounts[currentCardId] += 1;
+      cache.players[data.userId].cardId = data.cardId;
+
+      socket.broadcast.emit("playerCardChange", data);
+    }
+  });
 });

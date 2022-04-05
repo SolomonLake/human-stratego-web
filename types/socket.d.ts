@@ -5,6 +5,11 @@ type PlayerMoveEvent = {
   position: PlayerPosition;
 };
 
+type PlayerCardChangeEvent = {
+  userId: string;
+  cardId: CardId;
+};
+
 type PlayerDisconnectEvent = {
   userId: string;
   disconnectedAt: number;
@@ -13,10 +18,12 @@ type PlayerDisconnectEvent = {
 interface ServerToClientEvents {
   playerJoin: (ev: PlayerJoinEvent) => void;
   playerMove: (ev: PlayerMoveEvent) => void;
+  playerCardChange: (ev: PlayerCardChangeEvent) => void;
   playerDisconnect: (ev: PlayerDisconnectEvent) => void;
   serverCache: (ev: ServerCache) => void;
 }
 
 interface ClientToServerEvents {
   playerMove: (ev: PlayerMoveEvent) => void;
+  playerCardChange: (ev: PlayerCardChangeEvent) => void;
 }

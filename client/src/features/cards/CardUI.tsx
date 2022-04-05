@@ -1,29 +1,24 @@
+import { ComponentProps } from "react";
 import { PALATTE } from "../theme/theme";
 import { CARDS } from "./cards";
 
-export const CardUI = ({
-  cardId,
-  gridColumn,
-  gridRow,
-  onClick,
-}: {
+interface CardUIProps extends ComponentProps<"rectangle"> {
   cardId: CardId;
-  gridColumn?: number;
-  gridRow?: number;
   onClick?: () => void;
-}) => {
+  color: string;
+}
+
+export const CardUI = ({ cardId, onClick, ...props }: CardUIProps) => {
   return (
     <rectangle
       name="card-ui"
       width={1}
       height={1}
-      color={PALATTE.team1}
       cornerRadius={20}
       background={PALATTE.light}
       thickness={6}
       key={cardId}
-      gridColumn={gridColumn}
-      gridRow={gridRow}
+      {...props}
     >
       <babylon-button onPointerClickObservable={onClick}>
         <textBlock

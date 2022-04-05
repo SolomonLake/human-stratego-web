@@ -1,15 +1,16 @@
 import { Vector3 } from "@babylonjs/core";
 import { useContext } from "react";
 import { Room } from "../../pieces/Room";
-import { InitialServerCacheContext } from "../../serverCache/InitialServerCacheContext";
+import { CacheContext } from "../../cache/CacheContext";
 import { useUserId } from "../../user/useUserId";
 import { SquareBaseLayer } from "./SquareBaseLayer";
 import { SquareTeamSide } from "./SquareTeamSide";
+import { useCacheStore } from "../../cache/useCache";
 
 export const SquareLevel = () => {
   const userId = useUserId();
 
-  const cache = useContext(InitialServerCacheContext);
+  const { cache } = useCacheStore();
 
   const userTeamId = cache?.players[userId]?.teamId;
 

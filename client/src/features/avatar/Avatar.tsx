@@ -1,7 +1,7 @@
 import { FreeCamera, Ray, RayHelper, Vector3 } from "@babylonjs/core";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useBeforeRender, useEngine, useScene } from "react-babylonjs";
-import { useServerCacheOnce } from "../serverCache/useServerCacheOnce";
+import { useCacheStore } from "../cache/useCache";
 import { useSocket } from "../sockets/useSocket";
 import { useUserId } from "../user/useUserId";
 import { throttle } from "throttle-debounce";
@@ -9,15 +9,16 @@ import { CollisionMask } from "../collision/collision";
 import { PALATTE } from "../theme/theme";
 import { Control } from "@babylonjs/gui";
 import { CARDS } from "../cards/cards";
-import { TeamCardPanelUI } from "../teamCardPanel/TeamCardPanelUI";
+import { TeamCardPanelUI } from "../teams/TeamCardPanelUI";
 import { CardUI } from "../cards/CardUI";
+import { useTeam } from "../teams/useTeam";
 
 export const AVATAR_HEIGHT = 1;
 export const AVATAR_FOREHEAD_HEIGHT = 0.05;
 export const AVATAR_WIDTH = AVATAR_HEIGHT * 0.33;
 export const AVATAR_DEPTH = AVATAR_HEIGHT * 0.15;
 
-const CAMERA_POSITION = { x: 0, y: 0, z: 0, yRotation: 0 };
+const INITIAL_CAMERA_POSITION = { x: 0, y: 0, z: 0, yRotation: 0 };
 
 export const Avatar = () => {
   const engine = useEngine();
@@ -25,7 +26,6 @@ export const Avatar = () => {
   const cameraRef = useRef<FreeCamera | null>(null);
   const socket = useSocket();
   const userId = useUserId();
-  // const [teamId, setTeamId] = useState<TeamId | undefined>();
 
   const throttleEmitPlayerMove = useCallback(
     throttle(500, ({ x, y, z, yRotation }: PlayerPosition) => {
@@ -42,25 +42,39 @@ export const Avatar = () => {
     [socket, userId]
   );
 
-  const [initialPosition, setInitialPosition] =
-    useState<PlayerPosition>(CAMERA_POSITION);
+  const [initialCachePosition, setInitialCachePosition] = useState<
+    PlayerPosition | undefined
+  >(undefined);
 
-  const [cardId, setCardId] = useState<CardId | undefined>(undefined);
+  const initialPosition = initialCachePosition || INITIAL_CAMERA_POSITION;
 
-  const [cameraPosition, setCameraPosition] = useState(CAMERA_POSITION);
+  const sendCardChange = (cardId: CardId) => {
+    socket.emit("playerCardChange", {
+      userId: userId,
+      cardId,
+    });
+  };
+
+  const [cameraPosition, setCameraPosition] = useState(INITIAL_CAMERA_POSITION);
 
   const [showTeamCardPanel, setShowTeamCardPanel] = useState(false);
 
-  useServerCacheOnce((cache) => {
-    const player = cache.players[userId];
-    if (player) {
-      setInitialPosition(player.position);
-      setCardId(player.cardId);
-      // setTeamId(player.teamId);
-    } else {
+  const { cache, dispatch } = useCacheStore();
+
+  const cardId = cache?.players[userId].cardId;
+  const teamId = cache?.players[userId].teamId;
+  const team = teamId ? cache?.teams[teamId] : undefined;
+
+  useEffect(() => {
+    const player = cache?.players[userId];
+    if (cache && !player) {
       throw new Error("No current player in cache...");
     }
-  });
+
+    if (player && !initialCachePosition) {
+      setInitialCachePosition(player.position);
+    }
+  }, [cache]);
 
   useEffect(() => {
     const canvas = engine?.getRenderingCanvas();
@@ -170,35 +184,48 @@ export const Avatar = () => {
             thickness={0}
             cornerRadius={20}
           >
-            <TeamCardPanelUI clickable />
-          </rectangle>
-        ) : (
-          <>
-            {/* 👆✖👁️‍🗨️🦝♠🔘 */}
-            <textBlock
-              name="crosshair-ui"
-              text="✖"
-              scaleX={0.4}
-              scaleY={0.4}
-              color={PALATTE.light}
+            <TeamCardPanelUI
+              onSelectCard={(selectedCardId: CardId) => {
+                if (selectedCardId !== cardId) {
+                  dispatch({
+                    type: "playerCardChanged",
+                    payload: { cardId: selectedCardId, userId },
+                  });
+                  setShowTeamCardPanel(false);
+                  sendCardChange(selectedCardId);
+                }
+              }}
+              onClose={() => {
+                setShowTeamCardPanel(false);
+              }}
             />
-            {cardId && (
-              <rectangle
-                width={0.1}
-                height={0.25}
-                verticalAlignment={Control.VERTICAL_ALIGNMENT_TOP}
-                horizontalAlignment={Control.HORIZONTAL_ALIGNMENT_LEFT}
-                paddingTop={"20px"}
-                paddingLeft={"10px"}
-                paddingRight={"10px"}
-                paddingBottom={"20px"}
-                thickness={0}
-              >
-                <CardUI cardId={cardId} />
-              </rectangle>
-            )}
-          </>
-        )}
+          </rectangle>
+        ) : null}
+        <>
+          {/* 👆✖👁️‍🗨️🦝♠🔘 */}
+          <textBlock
+            name="crosshair-ui"
+            text="✖"
+            scaleX={0.4}
+            scaleY={0.4}
+            color={PALATTE.light}
+          />
+          {cardId && team && (
+            <rectangle
+              width={0.1}
+              height={0.25}
+              verticalAlignment={Control.VERTICAL_ALIGNMENT_TOP}
+              horizontalAlignment={Control.HORIZONTAL_ALIGNMENT_LEFT}
+              paddingTop={"20px"}
+              paddingLeft={"10px"}
+              paddingRight={"10px"}
+              paddingBottom={"20px"}
+              thickness={0}
+            >
+              <CardUI cardId={cardId} color={PALATTE[team.color]} />
+            </rectangle>
+          )}
+        </>
       </adtFullscreenUi>
     </>
   );

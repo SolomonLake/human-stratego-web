@@ -4,7 +4,7 @@ import { CARDS } from "../cards/cards";
 import { CollisionGroup } from "../collision/collision";
 import { Room } from "../pieces/Room";
 import { Wall } from "../pieces/Wall";
-import { TeamCardPanelWall } from "../teamCardPanel/TeamCardPanelWall";
+import { TeamCardPanelWall } from "../teams/TeamCardPanelWall";
 import { PALATTE } from "../theme/theme";
 
 export const Base = ({
