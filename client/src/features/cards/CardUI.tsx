@@ -23,7 +23,7 @@ export const CardUI = ({ cardId, onClick, ...props }: CardUIProps) => {
       <babylon-button onPointerClickObservable={onClick}>
         <textBlock
           name="card-text-ui"
-          text={CARDS[cardId].displayCharacter}
+          text={CARDS[cardId].displayAbbreviation}
           fontSize={60}
         />
       </babylon-button>

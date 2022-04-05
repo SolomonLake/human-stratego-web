@@ -211,19 +211,31 @@ export const Avatar = () => {
             color={PALATTE.light}
           />
           {cardId && team && (
-            <rectangle
-              width={0.1}
-              height={0.25}
+            <stackPanel
               verticalAlignment={Control.VERTICAL_ALIGNMENT_TOP}
               horizontalAlignment={Control.HORIZONTAL_ALIGNMENT_LEFT}
-              paddingTop={"20px"}
               paddingLeft={"10px"}
               paddingRight={"10px"}
-              paddingBottom={"20px"}
-              thickness={0}
+              isVertical
             >
-              <CardUI cardId={cardId} color={PALATTE[team.color]} />
-            </rectangle>
+              <rectangle height={"50px"} thickness={0}>
+                <textBlock
+                  text={CARDS[cardId].displayName}
+                  fontSize={40}
+                  textHorizontalAlignment={Control.HORIZONTAL_ALIGNMENT_LEFT}
+                  color={PALATTE[team.color]}
+                  outlineWidth={13}
+                  outlineColor={PALATTE.light}
+                />
+              </rectangle>
+              <CardUI
+                cardId={cardId}
+                color={PALATTE[team.color]}
+                height={"200px"}
+                width={"150px"}
+                horizontalAlignment={Control.HORIZONTAL_ALIGNMENT_LEFT}
+              />
+            </stackPanel>
           )}
         </>
       </adtFullscreenUi>

@@ -18,15 +18,15 @@ const server = app.listen(port);
 
 const initialCardCounts = {
   scout: 6,
-  diffuser: 0,
-  footpad: 0,
-  thief: 0,
-  agent: 0,
-  spy: 0,
-  assassin: 0,
-  battlemaster: 0,
-  councillor: 0,
-  bomb: 2,
+  diffuser: 4,
+  footpad: 3,
+  thief: 3,
+  agent: 2,
+  spy: 1,
+  assassin: 2,
+  battlemaster: 2,
+  councillor: 2,
+  bomb: 3,
 };
 
 const cache: ServerCache = {

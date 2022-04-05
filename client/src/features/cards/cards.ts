@@ -1,6 +1,6 @@
 type BaseCard = {
   displayName: string;
-  displayCharacter: string;
+  displayAbbreviation: string;
 };
 
 type RankCard = BaseCard & {
@@ -19,24 +19,32 @@ type EliteCard = BaseCard & {
 type Card = BombCard | RankCard | EliteCard;
 
 export const CARDS = {
-  assassin: { type: "elite", displayName: "Assassin", displayCharacter: "A" },
+  assassin: {
+    type: "elite",
+    displayName: "Assassin",
+    displayAbbreviation: "A",
+  },
   battlemaster: {
     type: "elite",
     displayName: "Battlemaster",
-    displayCharacter: "B",
+    displayAbbreviation: "B",
   },
   councillor: {
     type: "elite",
     displayName: "Councillor",
-    displayCharacter: "C",
+    displayAbbreviation: "C",
   },
 
-  bomb: { type: "bomb", displayName: "Bomb", displayCharacter: "💣" },
+  bomb: { type: "bomb", displayName: "Bomb", displayAbbreviation: "💣" },
 
-  scout: { type: "rank", displayName: "Scout", displayCharacter: "1" },
-  diffuser: { type: "rank", displayName: "Diffuser", displayCharacter: "2" },
-  footpad: { type: "rank", displayName: "Footpad", displayCharacter: "3" },
-  thief: { type: "rank", displayName: "Thief", displayCharacter: "4" },
-  agent: { type: "rank", displayName: "Agent", displayCharacter: "5" },
-  spy: { type: "rank", displayName: "Spy", displayCharacter: "6" },
+  scout: { type: "rank", displayName: "Scout", displayAbbreviation: "1" },
+  diffuser: {
+    type: "rank",
+    displayName: "Diffuser",
+    displayAbbreviation: "2💥",
+  },
+  footpad: { type: "rank", displayName: "Footpad", displayAbbreviation: "3" },
+  thief: { type: "rank", displayName: "Thief", displayAbbreviation: "4" },
+  agent: { type: "rank", displayName: "Agent", displayAbbreviation: "5" },
+  spy: { type: "rank", displayName: "Spy", displayAbbreviation: "6" },
 };
