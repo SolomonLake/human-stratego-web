@@ -51,7 +51,7 @@ export const Base = ({
       wallVisibility={userMatchesTeam ? 0.4 : 1}
       emissiveWalls
     >
-      <TeamCardPanelWall roomSize={size} />
+      <TeamCardPanelWall roomSize={size} teamSide={team.side} />
     </Room>
   );
 };
