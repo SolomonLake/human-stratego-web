@@ -34,7 +34,13 @@ export const TeamCardPanelUI = ({
   onSelectCard?: (cardId: CardId) => void;
   onClose?: () => void;
 }) => {
-  const cardIds = Object.keys(CARDS);
+  const cardIds = (Object.keys(CARDS) as CardId[]).sort((cardA, cardB) => {
+    // Sort elite cards first, then bomb, then everything else
+    if (CARDS[cardB].type === "elite") return 1;
+    if (CARDS[cardA].type === "elite") return -1;
+    if (CARDS[cardA].type === "bomb") return -1;
+    return 0;
+  });
   const firstRowCount = Math.ceil(cardIds.length / 2) - 1;
   const firstRowCardIds = cardIds.slice(0, firstRowCount) as CardId[];
   const secondRowCardIds = cardIds.slice(

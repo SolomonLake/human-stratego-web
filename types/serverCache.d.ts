@@ -1,13 +1,13 @@
 type CardCounts = {
-  scout: number;
-  diffuser: number;
-  footpad: number;
-  thief: number;
-  agent: number;
-  spy: number;
-  assassin: number;
-  battlemaster: number;
-  councillor: number;
+  "1": number;
+  "2": number;
+  "3": number;
+  "4": number;
+  "5": number;
+  "6": number;
+  a: number;
+  b: number;
+  c: number;
   bomb: number;
 };
 

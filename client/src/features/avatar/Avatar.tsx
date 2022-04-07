@@ -216,6 +216,7 @@ export const Avatar = () => {
               horizontalAlignment={Control.HORIZONTAL_ALIGNMENT_LEFT}
               paddingLeft={"10px"}
               paddingRight={"10px"}
+              paddingTop={"10px"}
               isVertical
             >
               <rectangle height={"50px"} thickness={0}>

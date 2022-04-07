@@ -17,15 +17,15 @@ const port = process.env.PORT || 8080;
 const server = app.listen(port);
 
 const initialCardCounts = {
-  scout: 6,
-  diffuser: 4,
-  footpad: 3,
-  thief: 3,
-  agent: 2,
-  spy: 1,
-  assassin: 2,
-  battlemaster: 2,
-  councillor: 2,
+  "1": 6,
+  "2": 4,
+  "3": 3,
+  "4": 3,
+  "5": 2,
+  "6": 1,
+  a: 2,
+  b: 2,
+  c: 2,
   bomb: 3,
 };
 
@@ -43,16 +43,16 @@ const cache: ServerCache = {
 
 function cardForPlayer(cardCounts: CardCounts): CardId {
   const orderToGive: CardId[] = [
-    "scout",
-    "diffuser",
-    "footpad",
-    "thief",
-    "agent",
-    "spy",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
     "bomb",
-    "assassin",
-    "battlemaster",
-    "councillor",
+    "a",
+    "b",
+    "c",
   ];
   for (let i = 0; i < orderToGive.length; i++) {
     const cardId = orderToGive[i];
