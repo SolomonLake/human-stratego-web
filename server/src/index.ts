@@ -65,11 +65,12 @@ function cardForPlayer(cardCounts: CardCounts): CardId {
 }
 
 function indexOfSmallest(a: any[]) {
-  let lowest = a[Math.floor(Math.random() * a.length)];
+  let lowestIndex = Math.floor(Math.random() * a.length);
   for (var i = 0; i < a.length; i++) {
-    if (a[i] < a[lowest]) lowest = i;
+    if (a[i] < a[lowestIndex]) lowestIndex = i;
   }
-  return lowest;
+  console.log("Lowest index", lowestIndex);
+  return lowestIndex;
 }
 
 const io = new Server<ClientToServerEvents, ServerToClientEvents>(server);
@@ -86,7 +87,8 @@ io.on("connection", (socket) => {
         Object.values(players).filter((player) => player.teamId === teamId)
           .length
     );
-    const teamId = teamIds[indexOfSmallest(playerCountsForTeams)];
+    const teamIndex = indexOfSmallest(playerCountsForTeams);
+    const teamId = teamIds[teamIndex];
     const teamCardIds = Object.keys(teams[teamId].cardCounts);
     const cardId = cardForPlayer(teams[teamId].cardCounts);
 
