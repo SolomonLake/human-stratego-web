@@ -22,7 +22,7 @@ const initialCardCounts = {
   "3": 3,
   "4": 3,
   "5": 2,
-  "6": 1,
+  "6": 0,
   a: 2,
   b: 2,
   c: 2,

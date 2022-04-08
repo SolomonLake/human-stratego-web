@@ -186,7 +186,11 @@ export const Avatar = () => {
           >
             <TeamCardPanelUI
               onSelectCard={(selectedCardId: CardId) => {
-                if (selectedCardId !== cardId) {
+                if (
+                  selectedCardId !== cardId &&
+                  team &&
+                  team.cardCounts[selectedCardId] > 0
+                ) {
                   dispatch({
                     type: "playerCardChanged",
                     payload: { cardId: selectedCardId, userId },

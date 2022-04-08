@@ -20,7 +20,11 @@ export const CardUI = ({ cardId, onClick, ...props }: CardUIProps) => {
       key={cardId}
       {...props}
     >
-      <babylon-button onPointerClickObservable={onClick}>
+      <babylon-button
+        onPointerClickObservable={onClick}
+        hoverCursor="pointer"
+        isEnabled={!!onClick}
+      >
         <textBlock
           name="card-text-ui"
           text={CARDS[cardId].displayAbbreviation}
