@@ -14,6 +14,8 @@ import { AVATAR_DEPTH, AVATAR_HEIGHT, AVATAR_WIDTH } from "../avatar/Avatar";
 import { PALATTE } from "../theme/theme";
 import { usePlayerMoveListener } from "./usePlayerMoveListener";
 
+export const PLAYER_MESH_NAME = "player";
+
 export const Player = ({
   userId,
   initialPlayer,
@@ -70,7 +72,7 @@ export const Player = ({
 
   return (
     <box
-      name="player"
+      name={PLAYER_MESH_NAME}
       ref={playerRef}
       position={
         new Vector3(
@@ -79,6 +81,7 @@ export const Player = ({
           initialPlayer.position.z
         )
       }
+      state={userId}
       onCreated={(box) => box.enableEdgesRendering()}
       edgesWidth={1}
       edgesColor={Color3.FromHexString(PALATTE.dark).toColor4()}

@@ -71,6 +71,7 @@ export const TeamCardPanelUI = ({
             cornerRadius={20}
             paddingTop={10}
             paddingLeft={10}
+            hoverCursor="pointer"
           >
             <textBlock fontSize={35} text="✖" />
           </babylon-button>

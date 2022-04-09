@@ -11,6 +11,8 @@ import { PositionalArrows } from "./dev/positionalArrows/PositionalArrows";
 import { SquareLevel } from "./features/levels/square/SquareLevel";
 import { CacheProvider } from "./features/cache/CacheProvider";
 import { Control } from "@babylonjs/gui";
+import { PLAYER_MESH_NAME } from "./features/players/Player";
+import { FLAG_MESH_NAME } from "./features/levels/square/SquareTeamSide";
 
 export const App = () => {
   const framesPerSecond = 60;
@@ -31,14 +33,17 @@ export const App = () => {
       >
         <SocketProvider>
           <CacheProvider>
-            <PositionalArrows />
+            {/* <PositionalArrows /> */}
             <directionalLight
               name="light1"
               direction={new Vector3(1, -1, 0.5)}
               position={new Vector3(-1000, 1000, -1000)}
               intensity={0.25}
             >
-              <shadowGenerator mapSize={1024} shadowCasters={["player"]} />
+              <shadowGenerator
+                mapSize={1024}
+                shadowCasters={[PLAYER_MESH_NAME, FLAG_MESH_NAME]}
+              />
             </directionalLight>
             <hemisphericLight
               name="light2"

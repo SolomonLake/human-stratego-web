@@ -4,6 +4,8 @@ import { CARDS } from "../cards/cards";
 import { PALATTE } from "../theme/theme";
 import { TeamCardPanelUI } from "./TeamCardPanelUI";
 
+export const TEAM_CARD_PANEL_WALL_NAME = "card-selector-plane";
+
 export const TeamCardPanelWall = ({
   roomSize,
   teamSide,
@@ -13,7 +15,7 @@ export const TeamCardPanelWall = ({
 }) => {
   return (
     <plane
-      name="card-selector-plane"
+      name={TEAM_CARD_PANEL_WALL_NAME}
       position={
         new Vector3((roomSize.x / 2 - 0.05) * teamSide, 0 - roomSize.y / 8, 0)
       }

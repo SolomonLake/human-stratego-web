@@ -3,6 +3,8 @@ import { Room } from "../../pieces/Room";
 import { PALATTE } from "../../theme/theme";
 import { SquareBaseLayer } from "./SquareBaseLayer";
 
+export const FLAG_MESH_NAME = "flag";
+
 export const SquareTeamSide = ({
   team,
   userMatchesTeam,
@@ -41,6 +43,19 @@ export const SquareTeamSide = ({
 
   return (
     <>
+      <box
+        name={FLAG_MESH_NAME}
+        size={0.25}
+        onCreated={(box) => box.enableEdgesRendering()}
+        edgesWidth={1}
+        edgesColor={teamColor3.toColor4()}
+        position={new Vector3(teamBackXPosition, roomYPosition / 2, 0)}
+      >
+        <standardMaterial
+          name="flag-material"
+          emissiveColor={Color3.FromHexString(PALATTE.accent)}
+        />
+      </box>
       <Room
         size={new Vector3(teamBackXSize, height, zWidth)}
         position={new Vector3(teamBackXPosition, roomYPosition, 0)}

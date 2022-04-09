@@ -1,4 +1,12 @@
-import { FreeCamera, Ray, RayHelper, Vector3 } from "@babylonjs/core";
+import {
+  AbstractMesh,
+  FreeCamera,
+  Mesh,
+  Ray,
+  RayHelper,
+  Scene,
+  Vector3,
+} from "@babylonjs/core";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useBeforeRender, useEngine, useScene } from "react-babylonjs";
 import { useCacheStore } from "../cache/useCache";
@@ -12,6 +20,8 @@ import { CARDS } from "../cards/cards";
 import { TeamCardPanelUI } from "../teams/TeamCardPanelUI";
 import { CardUI } from "../cards/CardUI";
 import { useTeam } from "../teams/useTeam";
+import { TEAM_CARD_PANEL_WALL_NAME } from "../teams/TeamCardPanelWall";
+import { PLAYER_MESH_NAME } from "../players/Player";
 
 export const AVATAR_HEIGHT = 1;
 export const AVATAR_FOREHEAD_HEIGHT = 0.05;
@@ -19,6 +29,16 @@ export const AVATAR_WIDTH = AVATAR_HEIGHT * 0.33;
 export const AVATAR_DEPTH = AVATAR_HEIGHT * 0.15;
 
 const INITIAL_CAMERA_POSITION = { x: 0, y: 0, z: 0, yRotation: 0 };
+
+const pickClickableMesh = (camera: FreeCamera, scene: Scene) => {
+  const target = camera.getTarget().subtract(camera.position);
+  const cameraRay = new Ray(camera.position, target, 3);
+
+  const clickableMeshNames = [TEAM_CARD_PANEL_WALL_NAME, PLAYER_MESH_NAME];
+  return scene.pickWithRay(cameraRay, (mesh) => {
+    return clickableMeshNames.includes(mesh.name);
+  });
+};
 
 export const Avatar = () => {
   const engine = useEngine();
@@ -64,6 +84,10 @@ export const Avatar = () => {
   const cardId = cache?.players[userId].cardId;
   const teamId = cache?.players[userId].teamId;
   const team = teamId ? cache?.teams[teamId] : undefined;
+
+  const [clickableMesh, setClickableMesh] = useState<
+    AbstractMesh | null | undefined
+  >(undefined);
 
   useEffect(() => {
     const player = cache?.players[userId];
@@ -111,28 +135,33 @@ export const Avatar = () => {
     }
   });
 
+  useBeforeRender(() => {
+    const camera = cameraRef.current;
+    if (camera && scene) {
+      const pickInfo = pickClickableMesh(camera, scene);
+      setClickableMesh(pickInfo?.pickedMesh);
+    }
+  });
+
   useEffect(() => {
     const canvas = engine?.getRenderingCanvas();
     const onMouseDown = (ev: MouseEvent) => {
       const camera = cameraRef.current;
       if (camera && scene) {
-        const target = camera.getTarget().subtract(camera.position);
-        const cameraRay = new Ray(camera.position, target);
-        const pickInfo = scene.pickWithRay(cameraRay, (mesh) => {
-          // return mesh == mazeMesh;
-          return true;
-        });
-        if (pickInfo?.pickedMesh?.name === "card-selector-plane") {
-          setShowTeamCardPanel(true);
-          document.exitPointerLock();
+        const pickInfo = pickClickableMesh(camera, scene);
+        if (pickInfo?.pickedMesh) {
+          switch (pickInfo?.pickedMesh.name) {
+            case TEAM_CARD_PANEL_WALL_NAME: {
+              setShowTeamCardPanel(true);
+              document.exitPointerLock();
+              break;
+            }
+            case PLAYER_MESH_NAME: {
+              const playerUserId = pickInfo.pickedMesh.state;
+              break;
+            }
+          }
         }
-        console.log(
-          "PICK INFO",
-          target,
-          pickInfo,
-          pickInfo?.pickedMesh?.name,
-          pickInfo?.getTextureCoordinates()
-        );
       }
     };
     if (cameraRef.current && scene && canvas) {
@@ -209,9 +238,9 @@ export const Avatar = () => {
           {/* 👆✖👁️‍🗨️🦝♠🔘 */}
           <textBlock
             name="crosshair-ui"
-            text="✖"
-            scaleX={0.4}
-            scaleY={0.4}
+            text={clickableMesh ? "🦝" : "✖"}
+            scaleX={clickableMesh ? 2 : 0.4}
+            scaleY={clickableMesh ? 2 : 0.4}
             color={PALATTE.light}
           />
           {cardId && team && (
