@@ -119,14 +119,11 @@ io.on("connection", (socket) => {
     });
   });
 
-  socket.on(
-    "playerMoved",
-    (data: { userId: string; position: PlayerPosition }) => {
-      cache.players[data.userId].position = data.position;
-      socket.broadcast.emit("playerMoved", data);
-    }
-  );
-  socket.on("playerCardChanged", (data: { userId: string; cardId: CardId }) => {
+  socket.on("playerMoved", (data) => {
+    cache.players[data.userId].position = data.position;
+    socket.broadcast.emit("playerMoved", data);
+  });
+  socket.on("playerCardChanged", (data) => {
     const { cardId: currentCardId, teamId } = cache.players[data.userId];
     if (cache.teams[teamId].cardCounts[data.cardId] > 0) {
       cache.teams[teamId].cardCounts[data.cardId] -= 1;
@@ -135,5 +132,13 @@ io.on("connection", (socket) => {
 
       socket.broadcast.emit("playerCardChanged", data);
     }
+  });
+  socket.on("playerConfronted", (data) => {
+    console.log(
+      "CONFRONT",
+      data,
+      cache.players[data.userId].cardId,
+      cache.players[data.confrontedUserId].cardId
+    );
   });
 });

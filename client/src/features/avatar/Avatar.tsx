@@ -158,6 +158,10 @@ export const Avatar = () => {
             }
             case PLAYER_MESH_NAME: {
               const playerUserId = pickInfo.pickedMesh.state;
+              socket.emit("playerConfronted", {
+                userId: userId,
+                confrontedUserId: playerUserId,
+              });
               break;
             }
           }
