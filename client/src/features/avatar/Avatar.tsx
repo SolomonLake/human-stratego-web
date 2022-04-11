@@ -81,8 +81,8 @@ export const Avatar = () => {
 
   const { cache, dispatch } = useCacheStore();
 
-  const cardId = cache?.players[userId].cardId;
-  const teamId = cache?.players[userId].teamId;
+  const cardId = cache?.players?.[userId]?.cardId;
+  const teamId = cache?.players?.[userId]?.teamId;
   const team = teamId ? cache?.teams[teamId] : undefined;
 
   const [clickableMesh, setClickableMesh] = useState<
@@ -91,9 +91,6 @@ export const Avatar = () => {
 
   useEffect(() => {
     const player = cache?.players[userId];
-    if (cache && !player) {
-      throw new Error("No current player in cache...");
-    }
 
     if (player && !initialCachePosition) {
       setInitialCachePosition(player.position);

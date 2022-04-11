@@ -34,7 +34,7 @@ type PlayerMap = {
   [userId: string]: Player;
 };
 
-type TeamMap = { "1": Team; "2": Team };
+type TeamMap = Record<TeamId, Team>;
 
 type ServerCache = {
   players: PlayerMap;

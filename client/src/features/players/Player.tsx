@@ -11,33 +11,41 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { useBeforeRender, useScene } from "react-babylonjs";
 import { AVATAR_DEPTH, AVATAR_HEIGHT, AVATAR_WIDTH } from "../avatar/Avatar";
+import { useCacheStore } from "../cache/useCache";
 import { PALATTE } from "../theme/theme";
 import { usePlayerMovedListener } from "./usePlayerMovedListener";
 
 export const PLAYER_MESH_NAME = "player";
 
-export const Player = ({
-  userId,
-  initialPlayer,
-  team,
-}: {
-  userId: string;
-  initialPlayer: Player;
-  team: Team;
-}) => {
+const PLAYER_DISCONNECT_TIMEOUT = 10 * 1000;
+
+const checkPlayerTimedOut = (disconnectedAt: number | undefined) =>
+  !!disconnectedAt && Date.now() - disconnectedAt > PLAYER_DISCONNECT_TIMEOUT;
+
+export const Player = ({ userId, team }: { userId: string; team: Team }) => {
   const playerRef = useRef<Mesh | null>(null);
+  const { cache } = useCacheStore();
 
-  const [livePosition, setLivePosition] = useState<PlayerPosition>(
-    initialPlayer.position
+  const initialPosition = useRef(cache.players[userId].position).current;
+
+  const player = cache.players[userId];
+
+  const [timedOut, setTimedOut] = useState(
+    checkPlayerTimedOut(player.disconnectedAt)
   );
-
-  usePlayerMovedListener((ev) => {
-    const playerMesh = playerRef.current;
-    if (playerMesh && ev.userId === userId) {
-      console.log("moving", ev);
-      setLivePosition(ev.position);
+  useEffect(() => {
+    if (player.disconnectedAt) {
+      setTimeout(() => {
+        setTimedOut(checkPlayerTimedOut(player.disconnectedAt));
+      }, PLAYER_DISCONNECT_TIMEOUT + 100);
+    } else {
+      setTimedOut(false);
     }
-  });
+  }, [player.disconnectedAt]);
+
+  const livePosition = player.position;
+
+  usePlayerMovedListener();
 
   useBeforeRender(() => {
     const playerMesh = playerRef.current;
@@ -70,22 +78,26 @@ export const Player = ({
 
   const teamColor = Color3.FromHexString(PALATTE[team.color]).toColor4();
 
+  if (timedOut) {
+    return null;
+  }
+
   return (
     <box
       name={PLAYER_MESH_NAME}
       ref={playerRef}
       position={
         new Vector3(
-          initialPlayer.position.x,
-          initialPlayer.position.y + AVATAR_HEIGHT / 2,
-          initialPlayer.position.z
+          initialPosition.x,
+          initialPosition.y + AVATAR_HEIGHT / 2,
+          initialPosition.z
         )
       }
       state={userId}
       onCreated={(box) => box.enableEdgesRendering()}
       edgesWidth={1}
       edgesColor={Color3.FromHexString(PALATTE.dark).toColor4()}
-      rotation={new Vector3(0, initialPlayer.position.yRotation, 0)}
+      rotation={new Vector3(0, initialPosition.yRotation, 0)}
       height={AVATAR_HEIGHT}
       width={AVATAR_WIDTH}
       depth={AVATAR_DEPTH}

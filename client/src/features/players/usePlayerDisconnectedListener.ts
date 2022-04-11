@@ -1,10 +1,12 @@
 import { useEffect } from "react";
+import { useCacheStore } from "../cache/useCache";
 import { useSocket } from "../sockets/useSocket";
 
 export const usePlayerDisconnectedListener = (
   onPlayerDisconnected: (ev: PlayerDisconnectedEvent) => void
 ) => {
   const socket = useSocket();
+  const { cache, dispatch } = useCacheStore();
 
   useEffect(() => {
     socket.on("playerDisconnected", onPlayerDisconnected);

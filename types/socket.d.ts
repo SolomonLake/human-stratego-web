@@ -1,4 +1,4 @@
-type PlayerJoinedEvent = { userId: string; position: PlayerPosition };
+type PlayerJoinedEvent = { userId: string; player: Player };
 
 type PlayerMovedEvent = {
   userId: string;

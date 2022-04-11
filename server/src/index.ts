@@ -99,20 +99,21 @@ io.on("connection", (socket) => {
       cardId,
       teamId,
     };
-
-    socket.broadcast.emit("playerJoined", {
-      userId,
-      position: cache.players[userId].position,
-    });
   }
 
   cache.players[userId].disconnectedAt = undefined;
+
+  socket.broadcast.emit("playerJoined", {
+    userId,
+    player: cache.players[userId],
+  });
 
   socket.emit("serverCache", cache);
 
   socket.on("disconnect", (reason) => {
     const disconnectedAt = Date.now();
     cache.players[userId].disconnectedAt = disconnectedAt;
+    console.log("disconnected", userId, reason);
     socket.broadcast.emit("playerDisconnected", {
       userId,
       disconnectedAt,

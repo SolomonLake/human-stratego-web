@@ -2,19 +2,19 @@ import { useEffect } from "react";
 import { useCacheStore } from "../cache/useCache";
 import { useSocket } from "../sockets/useSocket";
 
-export const usePlayerMovedListener = () => {
+export const usePlayerJoinedListener = () => {
   const socket = useSocket();
   const { cache, dispatch } = useCacheStore();
 
-  const onPlayerMoved = (ev: PlayerMovedEvent) => {
-    dispatch({ type: "playerMoved", payload: ev });
+  const onPlayerJoined = (ev: PlayerJoinedEvent) => {
+    dispatch({ type: "playerJoined", event: ev });
   };
 
   useEffect(() => {
-    socket.on("playerMoved", onPlayerMoved);
+    socket.on("playerJoined", onPlayerJoined);
 
     return () => {
-      socket.off("playerMoved", onPlayerMoved);
+      socket.off("playerJoined", onPlayerJoined);
     };
   }, [socket]);
 };
