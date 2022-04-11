@@ -1,4 +1,4 @@
-import { Color3, Vector3 } from "@babylonjs/core";
+import { Color3, ShadowGenerator, Vector3 } from "@babylonjs/core";
 import { Engine, Scene } from "react-babylonjs";
 import { Avatar } from "./features/avatar/Avatar";
 import { ResizeEngine } from "./features/resize/ResizeEngine";
@@ -37,10 +37,10 @@ export const App = () => {
             <directionalLight
               name="light1"
               direction={new Vector3(1, -1, 0.5)}
-              position={new Vector3(-1000, 1000, -1000)}
+              position={new Vector3(-500, 100, -500)}
               intensity={0.25}
             >
-              <shadowGenerator
+              <cascadedShadowGenerator
                 mapSize={1024}
                 shadowCasters={[PLAYER_MESH_NAME, FLAG_MESH_NAME]}
               />

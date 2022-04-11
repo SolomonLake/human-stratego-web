@@ -201,6 +201,7 @@ export const Avatar = () => {
         applyGravity
         speed={0.1}
         minZ={0.01}
+        maxZ={50}
       ></freeCamera>
 
       <adtFullscreenUi name="fullscreen-ui">
