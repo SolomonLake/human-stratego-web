@@ -1,16 +1,16 @@
 import { useEffect } from "react";
 import { useSocket } from "../sockets/useSocket";
 
-export const usePlayerMoveListener = (
-  onPlayerMove: (ev: PlayerMoveEvent) => void
+export const usePlayerMovedListener = (
+  onPlayerMoved: (ev: PlayerMovedEvent) => void
 ) => {
   const socket = useSocket();
 
   useEffect(() => {
-    socket.on("playerMove", onPlayerMove);
+    socket.on("playerMoved", onPlayerMoved);
 
     return () => {
-      socket.off("playerMove", onPlayerMove);
+      socket.off("playerMoved", onPlayerMoved);
     };
   }, [socket]);
 };

@@ -3,11 +3,11 @@ import { useCacheStore } from "../cache/useCache";
 import { useSocket } from "../sockets/useSocket";
 import { useUserId } from "../user/useUserId";
 import { Player } from "./Player";
-import { usePlayerDisconnectListener } from "./usePlayerDisconnectListener";
+import { usePlayerDisconnectedListener } from "./usePlayerDisconnectedListener";
 
 type PlayerAction =
-  | { type: "player/playerJoined"; event: PlayerJoinEvent }
-  | { type: "player/playerDisconnected"; event: PlayerDisconnectEvent }
+  | { type: "player/playerJoined"; event: PlayerJoinedEvent }
+  | { type: "player/playerDisconnected"; event: PlayerDisconnectedEvent }
   | { type: "player/playersReceived"; players: ServerCache["players"] };
 
 const playersReducer = (state: PlayerMap, action: PlayerAction) => {
@@ -54,16 +54,16 @@ export const Players = () => {
   }, [cache]);
 
   useEffect(() => {
-    const onPlayerJoin = (ev: PlayerJoinEvent) => {
+    const onPlayerJoined = (ev: PlayerJoinedEvent) => {
       dispatch({ type: "player/playerJoined", event: ev });
     };
-    socket.on("playerJoin", onPlayerJoin);
+    socket.on("playerJoined", onPlayerJoined);
     return () => {
-      socket.off("playerJoin", onPlayerJoin);
+      socket.off("playerJoined", onPlayerJoined);
     };
   });
 
-  usePlayerDisconnectListener((ev) =>
+  usePlayerDisconnectedListener((ev) =>
     dispatch({ type: "player/playerDisconnected", event: ev })
   );
 

@@ -12,7 +12,7 @@ import { useEffect, useRef, useState } from "react";
 import { useBeforeRender, useScene } from "react-babylonjs";
 import { AVATAR_DEPTH, AVATAR_HEIGHT, AVATAR_WIDTH } from "../avatar/Avatar";
 import { PALATTE } from "../theme/theme";
-import { usePlayerMoveListener } from "./usePlayerMoveListener";
+import { usePlayerMovedListener } from "./usePlayerMovedListener";
 
 export const PLAYER_MESH_NAME = "player";
 
@@ -31,7 +31,7 @@ export const Player = ({
     initialPlayer.position
   );
 
-  usePlayerMoveListener((ev) => {
+  usePlayerMovedListener((ev) => {
     const playerMesh = playerRef.current;
     if (playerMesh && ev.userId === userId) {
       console.log("moving", ev);

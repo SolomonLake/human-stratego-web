@@ -47,9 +47,9 @@ export const Avatar = () => {
   const socket = useSocket();
   const userId = useUserId();
 
-  const throttleEmitPlayerMove = useCallback(
+  const throttleEmitPlayerMoved = useCallback(
     throttle(500, ({ x, y, z, yRotation }: PlayerPosition) => {
-      socket.emit("playerMove", {
+      socket.emit("playerMoved", {
         userId: userId,
         position: {
           x,
@@ -69,7 +69,7 @@ export const Avatar = () => {
   const initialPosition = initialCachePosition || INITIAL_CAMERA_POSITION;
 
   const sendCardChange = (cardId: CardId) => {
-    socket.emit("playerCardChange", {
+    socket.emit("playerCardChanged", {
       userId: userId,
       cardId,
     });
@@ -130,7 +130,7 @@ export const Avatar = () => {
       ) {
         const newPosition = { x, y, z, yRotation };
         setCameraPosition(newPosition);
-        throttleEmitPlayerMove(newPosition);
+        throttleEmitPlayerMoved(newPosition);
       }
     }
   });

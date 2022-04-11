@@ -1,29 +1,29 @@
-type PlayerJoinEvent = { userId: string; position: PlayerPosition };
+type PlayerJoinedEvent = { userId: string; position: PlayerPosition };
 
-type PlayerMoveEvent = {
+type PlayerMovedEvent = {
   userId: string;
   position: PlayerPosition;
 };
 
-type PlayerCardChangeEvent = {
+type PlayerCardChangedEvent = {
   userId: string;
   cardId: CardId;
 };
 
-type PlayerDisconnectEvent = {
+type PlayerDisconnectedEvent = {
   userId: string;
   disconnectedAt: number;
 };
 
 interface ServerToClientEvents {
-  playerJoin: (ev: PlayerJoinEvent) => void;
-  playerMove: (ev: PlayerMoveEvent) => void;
-  playerCardChange: (ev: PlayerCardChangeEvent) => void;
-  playerDisconnect: (ev: PlayerDisconnectEvent) => void;
+  playerJoined: (ev: PlayerJoinedEvent) => void;
+  playerMoved: (ev: PlayerMovedEvent) => void;
+  playerCardChanged: (ev: PlayerCardChangedEvent) => void;
+  playerDisconnected: (ev: PlayerDisconnectedEvent) => void;
   serverCache: (ev: ServerCache) => void;
 }
 
 interface ClientToServerEvents {
-  playerMove: (ev: PlayerMoveEvent) => void;
-  playerCardChange: (ev: PlayerCardChangeEvent) => void;
+  playerMoved: (ev: PlayerMovedEvent) => void;
+  playerCardChanged: (ev: PlayerCardChangedEvent) => void;
 }

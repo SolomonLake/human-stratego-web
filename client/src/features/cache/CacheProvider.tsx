@@ -4,7 +4,7 @@ import { CacheContext } from "./CacheContext";
 
 type Action =
   | { type: "initialServerCache"; cache: ServerCache }
-  | { type: "playerCardChanged"; payload: PlayerCardChangeEvent };
+  | { type: "playerCardChanged"; payload: PlayerCardChangedEvent };
 
 export type CacheState = ServerCache | undefined;
 

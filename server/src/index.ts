@@ -100,7 +100,7 @@ io.on("connection", (socket) => {
       teamId,
     };
 
-    socket.broadcast.emit("playerJoin", {
+    socket.broadcast.emit("playerJoined", {
       userId,
       position: cache.players[userId].position,
     });
@@ -113,27 +113,27 @@ io.on("connection", (socket) => {
   socket.on("disconnect", (reason) => {
     const disconnectedAt = Date.now();
     cache.players[userId].disconnectedAt = disconnectedAt;
-    socket.broadcast.emit("playerDisconnect", {
+    socket.broadcast.emit("playerDisconnected", {
       userId,
       disconnectedAt,
     });
   });
 
   socket.on(
-    "playerMove",
+    "playerMoved",
     (data: { userId: string; position: PlayerPosition }) => {
       cache.players[data.userId].position = data.position;
-      socket.broadcast.emit("playerMove", data);
+      socket.broadcast.emit("playerMoved", data);
     }
   );
-  socket.on("playerCardChange", (data: { userId: string; cardId: CardId }) => {
+  socket.on("playerCardChanged", (data: { userId: string; cardId: CardId }) => {
     const { cardId: currentCardId, teamId } = cache.players[data.userId];
     if (cache.teams[teamId].cardCounts[data.cardId] > 0) {
       cache.teams[teamId].cardCounts[data.cardId] -= 1;
       cache.teams[teamId].cardCounts[currentCardId] += 1;
       cache.players[data.userId].cardId = data.cardId;
 
-      socket.broadcast.emit("playerCardChange", data);
+      socket.broadcast.emit("playerCardChanged", data);
     }
   });
 });
