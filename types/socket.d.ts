@@ -16,15 +16,15 @@ type PlayerDisconnectedEvent = {
 };
 
 type PlayerConfrontedEvent = {
-  userId: string;
-  confrontedUserId: string;
+  defendingUserId: string;
+  attackingUserId: string;
 };
 
 type PlayerConfrontationResolvedEvent = {
-  userId: string;
-  userCard: CardId;
-  confrontedUserId: string;
-  confrontedUserCard: CardId;
+  defendingUserId: string;
+  defendingUserCardId: CardId;
+  attackingUserId: string;
+  attackingUserCardId: CardId;
 };
 
 interface ServerToClientEvents {

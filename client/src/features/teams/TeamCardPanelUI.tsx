@@ -5,7 +5,7 @@ import { CARDS } from "../cards/cards";
 import { PALATTE } from "../theme/theme";
 import { Key, ReactNode, Ref } from "react";
 import { CardUI } from "../cards/CardUI";
-import { useCacheStore } from "../cache/useCache";
+import { useCacheStore } from "../cache/useCacheStore";
 import { useAvatarTeam } from "../avatar/useAvatarTeam";
 import { useTeam } from "./useTeam";
 import { TeamCardUI } from "./TeamCardUI";

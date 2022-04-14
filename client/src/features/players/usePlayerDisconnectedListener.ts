@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useCacheStore } from "../cache/useCache";
+import { useCacheStore } from "../cache/useCacheStore";
 import { useSocket } from "../sockets/useSocket";
 
 export const usePlayerDisconnectedListener = (

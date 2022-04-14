@@ -1,6 +1,6 @@
 import { Control } from "@babylonjs/gui";
 import { useAvatarTeam } from "../avatar/useAvatarTeam";
-import { useCacheStore } from "../cache/useCache";
+import { useCacheStore } from "../cache/useCacheStore";
 import { CardUI } from "../cards/CardUI";
 import { PALATTE } from "../theme/theme";
 import { useTeam } from "./useTeam";

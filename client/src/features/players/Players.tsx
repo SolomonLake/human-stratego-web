@@ -1,4 +1,4 @@
-import { useCacheStore } from "../cache/useCache";
+import { useCacheStore } from "../cache/useCacheStore";
 import { useSocket } from "../sockets/useSocket";
 import { useUserId } from "../user/useUserId";
 import { Player } from "./Player";

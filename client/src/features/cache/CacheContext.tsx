@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { CacheState, CacheStore, initialCacheState } from "./CacheProvider";
+import { CacheStore, initialCacheState } from "./cacheStore";
 
 export const CacheContext = createContext<CacheStore>({
   cache: initialCacheState,

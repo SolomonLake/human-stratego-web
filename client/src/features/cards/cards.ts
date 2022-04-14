@@ -14,25 +14,29 @@ type BombCard = BaseCard & {
 
 type EliteCard = BaseCard & {
   type: "elite";
+  eliteRank: "a" | "b" | "c";
 };
 
-type Card = BombCard | RankCard | EliteCard;
+export type Card = BombCard | RankCard | EliteCard;
 
 export const CARDS: { [key in CardId]: Card } = {
   a: {
     type: "elite",
     displayName: "Assassin",
     displayAbbreviation: "A",
+    eliteRank: "a",
   },
   b: {
     type: "elite",
     displayName: "Bureaucrat",
     displayAbbreviation: "B",
+    eliteRank: "b",
   },
   c: {
     type: "elite",
     displayName: "Champion",
     displayAbbreviation: "C",
+    eliteRank: "c",
   },
 
   bomb: { type: "bomb", displayName: "Bomb", displayAbbreviation: "💣" },

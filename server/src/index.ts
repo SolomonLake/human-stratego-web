@@ -135,11 +135,11 @@ io.on("connection", (socket) => {
     }
   });
   socket.on("playerConfronted", (data) => {
-    console.log(
-      "CONFRONT",
-      data,
-      cache.players[data.userId].cardId,
-      cache.players[data.confrontedUserId].cardId
-    );
+    socket.broadcast.emit("playerConfrontationResolved", {
+      defendingUserId: data.defendingUserId,
+      attackingUserId: data.attackingUserId,
+      defendingUserCardId: cache.players[data.defendingUserId].cardId,
+      attackingUserCardId: cache.players[data.attackingUserId].cardId,
+    });
   });
 });

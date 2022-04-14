@@ -11,7 +11,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { useBeforeRender, useScene } from "react-babylonjs";
 import { AVATAR_DEPTH, AVATAR_HEIGHT, AVATAR_WIDTH } from "../avatar/Avatar";
-import { useCacheStore } from "../cache/useCache";
+import { useCacheStore } from "../cache/useCacheStore";
 import { PALATTE } from "../theme/theme";
 import { usePlayerMovedListener } from "./usePlayerMovedListener";
 

@@ -9,7 +9,7 @@ import {
 } from "@babylonjs/core";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useBeforeRender, useEngine, useScene } from "react-babylonjs";
-import { useCacheStore } from "../cache/useCache";
+import { useCacheStore } from "../cache/useCacheStore";
 import { useSocket } from "../sockets/useSocket";
 import { useUserId } from "../user/useUserId";
 import { throttle } from "throttle-debounce";
@@ -22,6 +22,8 @@ import { CardUI } from "../cards/CardUI";
 import { useTeam } from "../teams/useTeam";
 import { TEAM_CARD_PANEL_WALL_NAME } from "../teams/TeamCardPanelWall";
 import { PLAYER_MESH_NAME } from "../players/Player";
+import { usePlayerConfrontationResolvedListener } from "../cache/listeners/usePlayerConfrontationResolvedListener";
+import { cardConfrontationWinner } from "../cards/cardConfrontationWinner";
 
 export const AVATAR_HEIGHT = 1;
 export const AVATAR_FOREHEAD_HEIGHT = 0.05;
@@ -155,9 +157,10 @@ export const Avatar = () => {
             }
             case PLAYER_MESH_NAME: {
               const playerUserId = pickInfo.pickedMesh.state;
+              // TODO: base off of where each player is located
               socket.emit("playerConfronted", {
-                userId: userId,
-                confrontedUserId: playerUserId,
+                defendingUserId: userId,
+                attackingUserId: playerUserId,
               });
               break;
             }
@@ -175,6 +178,19 @@ export const Avatar = () => {
       }
     };
   }, [cameraRef, scene]);
+
+  usePlayerConfrontationResolvedListener((ev) => {
+    if (ev.defendingUserId === userId || ev.attackingUserCardId === userId) {
+      const winnerId = cardConfrontationWinner(ev);
+      if (userId !== winnerId) {
+        // player loses, transport them back to base and take away card
+        // TODO
+      }
+
+      // show confrontation modal
+      // TODO
+    }
+  });
 
   return (
     <>

@@ -1,4 +1,4 @@
-import { useCacheStore } from "../cache/useCache";
+import { useCacheStore } from "../cache/useCacheStore";
 import { useUserId } from "../user/useUserId";
 
 export const useAvatarTeam = () => {

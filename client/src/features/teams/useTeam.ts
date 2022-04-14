@@ -1,4 +1,4 @@
-import { useCacheStore } from "../cache/useCache";
+import { useCacheStore } from "../cache/useCacheStore";
 
 export const useTeam = (teamId?: TeamId) => {
   const { cache } = useCacheStore();

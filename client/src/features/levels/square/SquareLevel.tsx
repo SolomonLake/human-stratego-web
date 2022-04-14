@@ -5,7 +5,7 @@ import { CacheContext } from "../../cache/CacheContext";
 import { useUserId } from "../../user/useUserId";
 import { SquareBaseLayer } from "./SquareBaseLayer";
 import { SquareTeamSide } from "./SquareTeamSide";
-import { useCacheStore } from "../../cache/useCache";
+import { useCacheStore } from "../../cache/useCacheStore";
 
 export const SquareLevel = () => {
   const userId = useUserId();
