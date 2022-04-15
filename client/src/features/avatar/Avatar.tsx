@@ -180,7 +180,7 @@ export const Avatar = () => {
   }, [cameraRef, scene]);
 
   usePlayerConfrontationResolvedListener((ev) => {
-    if (ev.defendingUserId === userId || ev.attackingUserCardId === userId) {
+    if (ev.defendingUserId === userId || ev.attackingUserId === userId) {
       const winnerId = cardConfrontationWinner(ev);
       if (userId !== winnerId) {
         // player loses, transport them back to base and take away card

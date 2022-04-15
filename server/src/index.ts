@@ -73,7 +73,7 @@ function indexOfSmallest(a: any[]) {
   return lowestIndex;
 }
 
-const io = new Server<ClientToServerEvents, ServerToClientEvents>(server);
+const io = new Server<ClientToServerEvents, ServerToClientEvents>(server, {});
 
 io.on("connection", (socket) => {
   const userId = socket.handshake.auth.userId;
