@@ -1,23 +1,25 @@
 import { Control } from "@babylonjs/gui";
+import { ComponentProps } from "react";
 import { useAvatarTeam } from "../avatar/useAvatarTeam";
 import { useCacheStore } from "../cache/useCacheStore";
 import { CardUI } from "../cards/CardUI";
 import { PALATTE } from "../theme/theme";
 import { useTeam } from "./useTeam";
 
+interface TeamCardUIProps extends ComponentProps<"rectangle"> {
+  cardId: CardId;
+  gridColumn?: number;
+  gridRow?: number;
+  onClick?: () => void;
+}
+
 export const TeamCardUI = ({
   cardId,
   gridColumn,
   gridRow,
-  onSelectCard,
-  onClose,
-}: {
-  cardId: CardId;
-  gridColumn?: number;
-  gridRow?: number;
-  onSelectCard?: (cardId: CardId) => void;
-  onClose?: () => void;
-}) => {
+  onClick,
+  ...props
+}: TeamCardUIProps) => {
   const teamId = useAvatarTeam();
 
   const { cache } = useCacheStore();
@@ -42,17 +44,9 @@ export const TeamCardUI = ({
         <CardUI
           cardId={cardId}
           key={cardId}
-          onClick={
-            onSelectCard
-              ? () => {
-                  onSelectCard(cardId);
-                  if (onClose) {
-                    onClose();
-                  }
-                }
-              : undefined
-          }
+          onClick={onClick}
           color={PALATTE[team?.color]}
+          {...props}
         />
       </rectangle>
       <rectangle

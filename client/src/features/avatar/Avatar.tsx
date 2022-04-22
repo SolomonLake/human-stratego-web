@@ -24,6 +24,8 @@ import { TEAM_CARD_PANEL_WALL_NAME } from "../teams/TeamCardPanelWall";
 import { PLAYER_MESH_NAME } from "../players/Player";
 import { usePlayerConfrontationResolvedListener } from "../cache/listeners/usePlayerConfrontationResolvedListener";
 import { cardConfrontationWinner } from "../cards/cardConfrontationWinner";
+import { TeamCardUI } from "../teams/TeamCardUI";
+import { useAvatarTeam } from "./useAvatarTeam";
 
 export const AVATAR_HEIGHT = 1;
 export const AVATAR_FOREHEAD_HEIGHT = 0.05;
@@ -79,8 +81,6 @@ export const Avatar = () => {
 
   const [cameraPosition, setCameraPosition] = useState(INITIAL_CAMERA_POSITION);
 
-  const [showTeamCardPanel, setShowTeamCardPanel] = useState(false);
-
   const { cache, dispatch } = useCacheStore();
 
   const cardId = cache?.players?.[userId]?.cardId;
@@ -90,6 +90,42 @@ export const Avatar = () => {
   const [clickableMesh, setClickableMesh] = useState<
     AbstractMesh | null | undefined
   >(undefined);
+
+  const requestPointerLock = useCallback(() => {
+    const canvas = engine?.getRenderingCanvas();
+    if (canvas && engine) {
+      canvas.requestPointerLock =
+        canvas.requestPointerLock ||
+        canvas.mozRequestPointerLock ||
+        canvas.webkitRequestPointerLock;
+
+      canvas.requestPointerLock();
+    }
+  }, [engine]);
+
+  type Modal =
+    | { name: "teamCardModal" }
+    | {
+        name: "confrontationModal";
+        data: {
+          otherPlayerUserId: string;
+          otherPlayerCardId: CardId;
+          isWinner: boolean;
+        };
+      };
+
+  const [modals, _setModals] = useState<Array<Modal>>([]);
+  const closeModal = useCallback(() => {
+    _setModals(modals.slice(1));
+  }, [modals]);
+  const openModal = useCallback(
+    (modal: Modal) => {
+      document.exitPointerLock();
+      _setModals([modal, ...modals]);
+    },
+    [modals]
+  );
+  const firstModal: Modal | undefined = modals[0];
 
   useEffect(() => {
     const player = cache?.players[userId];
@@ -102,18 +138,19 @@ export const Avatar = () => {
   useEffect(() => {
     const canvas = engine?.getRenderingCanvas();
     if (canvas && engine) {
-      canvas.onclick = function () {
-        canvas.requestPointerLock =
-          canvas.requestPointerLock ||
-          canvas.mozRequestPointerLock ||
-          canvas.webkitRequestPointerLock;
-
-        canvas.requestPointerLock();
+      canvas.onclick = () => {
+        if (!firstModal) {
+          requestPointerLock();
+        }
       };
       canvas.tabIndex = engine.canvasTabIndex;
       canvas.focus();
+
+      if (!firstModal) {
+        requestPointerLock();
+      }
     }
-  });
+  }, [firstModal]);
 
   useBeforeRender(() => {
     const camera = cameraRef.current;
@@ -151,16 +188,15 @@ export const Avatar = () => {
         if (pickInfo?.pickedMesh) {
           switch (pickInfo?.pickedMesh.name) {
             case TEAM_CARD_PANEL_WALL_NAME: {
-              setShowTeamCardPanel(true);
-              document.exitPointerLock();
+              openModal({ name: "teamCardModal" });
               break;
             }
             case PLAYER_MESH_NAME: {
               const playerUserId = pickInfo.pickedMesh.state;
               // TODO: base off of where each player is located
               socket.emit("playerConfronted", {
-                defendingUserId: userId,
-                attackingUserId: playerUserId,
+                attackingUserId: userId,
+                defendingUserId: playerUserId,
               });
               break;
             }
@@ -181,14 +217,27 @@ export const Avatar = () => {
 
   usePlayerConfrontationResolvedListener((ev) => {
     if (ev.defendingUserId === userId || ev.attackingUserId === userId) {
+      const isDefending = userId === ev.defendingUserId;
       const winnerId = cardConfrontationWinner(ev);
-      if (userId !== winnerId) {
+      const isWinner = userId === winnerId;
+
+      openModal({
+        name: "confrontationModal",
+        data: {
+          otherPlayerUserId: isDefending
+            ? ev.attackingUserId
+            : ev.defendingUserId,
+          otherPlayerCardId: isDefending
+            ? ev.attackingUserCardId
+            : ev.defendingUserCardId,
+          isWinner,
+        },
+      });
+
+      if (!isWinner) {
         // player loses, transport them back to base and take away card
         // TODO
       }
-
-      // show confrontation modal
-      // TODO
     }
   });
 
@@ -222,7 +271,94 @@ export const Avatar = () => {
       ></freeCamera>
 
       <adtFullscreenUi name="fullscreen-ui">
-        {showTeamCardPanel ? (
+        {firstModal?.name === "confrontationModal" && team ? (
+          <rectangle
+            name="confrontation-modal-background"
+            width={0.6}
+            height={0.8}
+            background={PALATTE.dark}
+            thickness={0}
+            cornerRadius={20}
+          >
+            <textBlock
+              height={0.2}
+              text="Confrontation!"
+              fontSize={45}
+              color={PALATTE.light}
+              verticalAlignment={Control.VERTICAL_ALIGNMENT_TOP}
+            />
+            <rectangle width={0.8} height={0.6} thickness={0}>
+              <rectangle
+                width={0.47}
+                thickness={0}
+                horizontalAlignment={Control.HORIZONTAL_ALIGNMENT_LEFT}
+              >
+                {firstModal.data.isWinner ? (
+                  <textBlock
+                    height={0.2}
+                    text="WINNER"
+                    fontSize={40}
+                    color={PALATTE.light}
+                    verticalAlignment={Control.VERTICAL_ALIGNMENT_TOP}
+                  />
+                ) : null}
+                <CardUI
+                  height={0.8}
+                  verticalAlignment={Control.VERTICAL_ALIGNMENT_BOTTOM}
+                  cardId={cardId}
+                  color={PALATTE[team.color]}
+                />
+              </rectangle>
+              <rectangle
+                width={0.47}
+                thickness={0}
+                horizontalAlignment={Control.HORIZONTAL_ALIGNMENT_RIGHT}
+              >
+                {!firstModal.data.isWinner ? (
+                  <textBlock
+                    height={0.2}
+                    text="WINNER"
+                    fontSize={40}
+                    color={PALATTE.light}
+                    verticalAlignment={Control.VERTICAL_ALIGNMENT_TOP}
+                  />
+                ) : null}
+                <CardUI
+                  height={0.8}
+                  verticalAlignment={Control.VERTICAL_ALIGNMENT_BOTTOM}
+                  cardId={firstModal.data.otherPlayerCardId}
+                  color={
+                    PALATTE[
+                      cache.teams[
+                        cache.players[firstModal.data.otherPlayerUserId].teamId
+                      ].color
+                    ]
+                  }
+                />
+              </rectangle>
+            </rectangle>
+            <rectangle
+              height={0.2}
+              verticalAlignment={Control.VERTICAL_ALIGNMENT_BOTTOM}
+              thickness={0}
+            >
+              <babylon-button
+                height={0.5}
+                width={0.25}
+                color={PALATTE.accent}
+                cornerRadius={30}
+                thickness={8}
+                hoverCursor="pointer"
+                onPointerClickObservable={() => {
+                  closeModal();
+                }}
+              >
+                <textBlock text="Continue" fontSize={30} />
+              </babylon-button>
+            </rectangle>
+          </rectangle>
+        ) : null}
+        {firstModal?.name === "teamCardModal" ? (
           <rectangle
             name="card-selector-background"
             width={0.7}
@@ -242,12 +378,12 @@ export const Avatar = () => {
                     type: "playerCardChanged",
                     payload: { cardId: selectedCardId, userId },
                   });
-                  setShowTeamCardPanel(false);
+                  closeModal();
                   sendCardChange(selectedCardId);
                 }
               }}
               onClose={() => {
-                setShowTeamCardPanel(false);
+                closeModal();
               }}
             />
           </rectangle>

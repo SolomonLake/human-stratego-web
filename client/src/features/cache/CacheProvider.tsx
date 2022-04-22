@@ -14,8 +14,13 @@ export const CacheProvider = (props: { children: ReactNode }) => {
     });
   }, []);
 
+  const value = {
+    cache,
+    dispatch,
+  };
+
   return (
-    <CacheContext.Provider value={{ cache, dispatch }}>
+    <CacheContext.Provider value={value}>
       {props.children}
     </CacheContext.Provider>
   );

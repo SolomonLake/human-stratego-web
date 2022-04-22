@@ -135,7 +135,7 @@ io.on("connection", (socket) => {
     }
   });
   socket.on("playerConfronted", (data) => {
-    socket.broadcast.emit("playerConfrontationResolved", {
+    io.emit("playerConfrontationResolved", {
       defendingUserId: data.defendingUserId,
       attackingUserId: data.attackingUserId,
       defendingUserCardId: cache.players[data.defendingUserId].cardId,

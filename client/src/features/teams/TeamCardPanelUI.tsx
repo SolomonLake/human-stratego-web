@@ -82,8 +82,16 @@ export const TeamCardPanelUI = ({
               cardId={cardId}
               gridColumn={index + 1}
               gridRow={0}
-              onSelectCard={onSelectCard}
-              onClose={onClose}
+              onClick={
+                onSelectCard
+                  ? () => {
+                      onSelectCard(cardId);
+                      if (onClose) {
+                        onClose();
+                      }
+                    }
+                  : undefined
+              }
               key={cardId}
             />
           );
@@ -94,8 +102,7 @@ export const TeamCardPanelUI = ({
               cardId={cardId}
               gridColumn={index}
               gridRow={1}
-              onSelectCard={onSelectCard}
-              onClose={onClose}
+              onClick={onSelectCard ? () => onSelectCard(cardId) : undefined}
               key={cardId}
             />
           );

@@ -4,7 +4,7 @@ import { CARDS } from "./cards";
 
 interface CardUIProps extends ComponentProps<"rectangle"> {
   cardId: CardId;
-  onClick?: () => void;
+  onClick?: (() => void) | undefined;
   color: string;
 }
 
