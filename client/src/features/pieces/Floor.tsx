@@ -1,5 +1,8 @@
 import { Color3, Vector3 } from "@babylonjs/core";
+import { Zone } from "../levels/zone";
 import { PALATTE } from "../theme/theme";
+
+export const FLOOR_MESH_NAME = "floor";
 
 export const Floor = ({
   widthX,
@@ -8,6 +11,7 @@ export const Floor = ({
   positionZ = 0,
   positionY = 0,
   color3,
+  zone,
 }: {
   widthX: number;
   widthZ: number;
@@ -15,10 +19,11 @@ export const Floor = ({
   positionZ?: number;
   positionY?: number;
   color3: Color3;
+  zone: Zone;
 }) => {
   return (
     <ground
-      name="ground"
+      name={FLOOR_MESH_NAME}
       checkCollisions
       height={widthZ}
       width={widthX}
@@ -27,6 +32,7 @@ export const Floor = ({
       onCreated={(mesh) => mesh.enableEdgesRendering()}
       edgesWidth={2}
       edgesColor={Color3.FromHexString(PALATTE.light).toColor4()}
+      state={zone}
     >
       <standardMaterial name="groundMaterial" diffuseColor={color3} />
     </ground>

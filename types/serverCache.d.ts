@@ -17,7 +17,11 @@ type Team = {
   color: "team1" | "team2";
   side: -1 | 1;
   cardCounts: CardCounts;
+  id: TeamId;
+  displayName: TeamDisplayName;
 };
+
+type TeamDisplayName = "Blue Team" | "Red Team";
 
 type TeamId = "1" | "2";
 

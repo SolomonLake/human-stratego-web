@@ -50,6 +50,7 @@ export const Base = ({
       color3={teamColor3}
       wallVisibility={userMatchesTeam ? 0.4 : 1}
       emissiveWalls
+      zone={"Base"}
     >
       <TeamCardPanelWall roomSize={size} teamSide={team.side} />
     </Room>

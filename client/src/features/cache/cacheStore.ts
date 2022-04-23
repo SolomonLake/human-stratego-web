@@ -30,8 +30,20 @@ const initialCardCounts = {
 
 export const initialCacheState: CacheState = {
   teams: {
-    "1": { color: "team1", side: 1, cardCounts: initialCardCounts },
-    "2": { color: "team2", side: -1, cardCounts: initialCardCounts },
+    "1": {
+      color: "team1",
+      side: 1,
+      cardCounts: initialCardCounts,
+      id: "1",
+      displayName: "Red Team",
+    },
+    "2": {
+      color: "team2",
+      side: -1,
+      cardCounts: initialCardCounts,
+      id: "2",
+      displayName: "Blue Team",
+    },
   },
   players: {},
 };

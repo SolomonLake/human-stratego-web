@@ -1,4 +1,5 @@
 import { Color3, Vector3 } from "@babylonjs/core";
+import { useCacheStore } from "../../cache/useCacheStore";
 import { Room } from "../../pieces/Room";
 import { PALATTE } from "../../theme/theme";
 import { SquareBaseLayer } from "./SquareBaseLayer";
@@ -65,6 +66,7 @@ export const SquareTeamSide = ({
         negativeZWall
         checkCollisions
         color3={teamColor3}
+        zone={team.displayName}
       />
       <SquareBaseLayer
         teamBaseXPosition={teamBaseXPosition}
@@ -83,6 +85,7 @@ export const SquareTeamSide = ({
         negativeZWall
         checkCollisions
         color3={teamColor3}
+        zone={team.displayName}
       />
       <Room
         size={new Vector3(neutralCenterXSize, height, zWidth)}
@@ -91,6 +94,7 @@ export const SquareTeamSide = ({
         negativeZWall
         checkCollisions
         color3={Color3.FromHexString(PALATTE.light)}
+        zone={"Neutral"}
       />
     </>
   );

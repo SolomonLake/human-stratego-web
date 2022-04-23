@@ -26,6 +26,8 @@ import { usePlayerConfrontationResolvedListener } from "../cache/listeners/usePl
 import { cardConfrontationWinner } from "../cards/cardConfrontationWinner";
 import { TeamCardUI } from "../teams/TeamCardUI";
 import { useAvatarTeam } from "./useAvatarTeam";
+import { Zone } from "../levels/zone";
+import { FLOOR_MESH_NAME } from "../pieces/Floor";
 
 export const AVATAR_HEIGHT = 1;
 export const AVATAR_FOREHEAD_HEIGHT = 0.05;
@@ -103,6 +105,8 @@ export const Avatar = () => {
     }
   }, [engine]);
 
+  const [zone, setZone] = useState<Zone>("Base");
+
   type Modal =
     | { name: "teamCardModal" }
     | {
@@ -174,6 +178,25 @@ export const Avatar = () => {
   useBeforeRender(() => {
     const camera = cameraRef.current;
     if (camera && scene) {
+      const floorRay = new Ray(camera.position, new Vector3(0, -1, 0), 3);
+      const pickedFloor = scene.pickWithRay(floorRay, (mesh) => {
+        return mesh.name === FLOOR_MESH_NAME;
+      });
+      if (pickedFloor?.pickedMesh?.state) {
+        const zone = pickedFloor.pickedMesh.state as Zone;
+        switch (zone) {
+          case "Blue Team":
+          case "Red Team":
+          case "Neutral":
+          case "Base":
+            setZone(zone);
+            break;
+          default:
+            const unreachable: never = zone;
+            throw new Error("Detected unknown zone: " + zone);
+        }
+      }
+
       const pickInfo = pickClickableMesh(camera, scene);
       setClickableMesh(pickInfo?.pickedMesh);
     }
@@ -401,19 +424,28 @@ export const Avatar = () => {
             <stackPanel
               verticalAlignment={Control.VERTICAL_ALIGNMENT_TOP}
               horizontalAlignment={Control.HORIZONTAL_ALIGNMENT_LEFT}
-              paddingLeft={"10px"}
-              paddingRight={"10px"}
-              paddingTop={"10px"}
+              paddingLeft={10}
+              paddingRight={10}
+              paddingTop={10}
               isVertical
             >
               <rectangle height={"50px"} thickness={0}>
                 <textBlock
                   text={CARDS[cardId].displayName}
                   fontSize={40}
+                  paddingLeft={10}
                   textHorizontalAlignment={Control.HORIZONTAL_ALIGNMENT_LEFT}
                   color={PALATTE[team.color]}
-                  outlineWidth={13}
+                  outlineWidth={12}
                   outlineColor={PALATTE.light}
+                />
+                <textBlock
+                  text={zone}
+                  fontSize={40}
+                  color={PALATTE[team.color]}
+                  outlineWidth={12}
+                  outlineColor={PALATTE.light}
+                  paddingRight={30}
                 />
               </rectangle>
               <CardUI

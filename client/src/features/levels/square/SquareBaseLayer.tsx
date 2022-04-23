@@ -38,6 +38,7 @@ export const SquareBaseLayer = ({
         positiveZWall
         checkCollisions
         color3={teamColor3}
+        zone={team.displayName}
       />
       <Room
         size={new Vector3(teamBaseXSize, height, teamBaseSideZSize)}
@@ -51,6 +52,7 @@ export const SquareBaseLayer = ({
         negativeZWall
         checkCollisions
         color3={teamColor3}
+        zone={team.displayName}
       />
       {/* Team Base */}
       <Base
