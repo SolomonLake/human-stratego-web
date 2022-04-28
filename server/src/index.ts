@@ -111,6 +111,10 @@ io.on("connection", (socket) => {
 
   cache.players[userId].disconnectedAt = undefined;
 
+  // socket.onAny((eventName, otherArgs) => {
+  //   console.log("Event!", userId, eventName, otherArgs);
+  // });
+
   socket.broadcast.emit("playerJoined", {
     userId,
     player: cache.players[userId],
@@ -122,10 +126,12 @@ io.on("connection", (socket) => {
     const disconnectedAt = Date.now();
     cache.players[userId].disconnectedAt = disconnectedAt;
     console.log("disconnected", userId, reason);
-    socket.broadcast.emit("playerDisconnected", {
-      userId,
-      disconnectedAt,
-    });
+    if (reason === "transport error") {
+      socket.broadcast.emit("playerDisconnected", {
+        userId,
+        disconnectedAt,
+      });
+    }
   });
 
   socket.on("playerMoved", (data) => {
