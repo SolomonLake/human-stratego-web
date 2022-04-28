@@ -1,5 +1,6 @@
 import { Color3, Mesh, Vector3 } from "@babylonjs/core";
-import { PALATTE } from "../theme/theme";
+
+export const WALL_MESH_NAME = "wall-plane";
 
 export const Wall = ({
   width,
@@ -30,7 +31,7 @@ export const Wall = ({
 }) => {
   return (
     <plane
-      name="wall-plane"
+      name={WALL_MESH_NAME}
       position={new Vector3(positionX, positionY, positionZ)}
       width={width}
       height={height}
@@ -40,6 +41,7 @@ export const Wall = ({
       collisionMask={collisionMask}
       sideOrientation={Mesh.DOUBLESIDE}
       visibility={visibility}
+      receiveShadows
     >
       <standardMaterial
         name="plane-material"

@@ -13,6 +13,7 @@ import { CacheProvider } from "./features/cache/CacheProvider";
 import { Control } from "@babylonjs/gui";
 import { PLAYER_MESH_NAME } from "./features/players/Player";
 import { FLAG_MESH_NAME } from "./features/levels/square/SquareTeamSide";
+import { WALL_MESH_NAME } from "./features/pieces/Wall";
 
 export const App = () => {
   const framesPerSecond = 60;
@@ -42,7 +43,11 @@ export const App = () => {
             >
               <cascadedShadowGenerator
                 mapSize={1024}
-                shadowCasters={[PLAYER_MESH_NAME, FLAG_MESH_NAME]}
+                shadowCasters={[
+                  PLAYER_MESH_NAME,
+                  FLAG_MESH_NAME,
+                  WALL_MESH_NAME,
+                ]}
               />
             </directionalLight>
             <hemisphericLight
