@@ -435,17 +435,17 @@ export const Avatar = () => {
                   fontSize={40}
                   paddingLeft={10}
                   textHorizontalAlignment={Control.HORIZONTAL_ALIGNMENT_LEFT}
-                  color={PALATTE[team.color]}
-                  outlineWidth={12}
-                  outlineColor={PALATTE.light}
+                  color={PALATTE.light}
+                  // color={PALATTE[team.color]}
+                  // outlineWidth={6}
+                  // outlineColor={PALATTE[team.color]}
                 />
                 <textBlock
                   text={zone}
                   fontSize={40}
-                  color={PALATTE[team.color]}
-                  outlineWidth={12}
-                  outlineColor={PALATTE.light}
-                  paddingRight={30}
+                  color={PALATTE.light}
+                  // outlineWidth={12}
+                  // outlineColor={PALATTE.light}
                 />
               </rectangle>
               <CardUI

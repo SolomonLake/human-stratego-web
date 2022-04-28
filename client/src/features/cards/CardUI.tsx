@@ -16,7 +16,7 @@ export const CardUI = ({ cardId, onClick, ...props }: CardUIProps) => {
       height={1}
       cornerRadius={20}
       background={PALATTE.light}
-      thickness={6}
+      thickness={10}
       key={cardId}
       {...props}
     >
