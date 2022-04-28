@@ -66,7 +66,7 @@ export const SquareTeamSide = ({
         negativeZWall
         checkCollisions
         color3={teamColor3}
-        zone={team.displayName}
+        zone={team.id}
       />
       <SquareBaseLayer
         teamBaseXPosition={teamBaseXPosition}
@@ -85,7 +85,7 @@ export const SquareTeamSide = ({
         negativeZWall
         checkCollisions
         color3={teamColor3}
-        zone={team.displayName}
+        zone={team.id}
       />
       <Room
         size={new Vector3(neutralCenterXSize, height, zWidth)}

@@ -26,8 +26,9 @@ import { usePlayerConfrontationResolvedListener } from "../cache/listeners/usePl
 import { cardConfrontationWinner } from "../cards/cardConfrontationWinner";
 import { TeamCardUI } from "../teams/TeamCardUI";
 import { useAvatarTeam } from "./useAvatarTeam";
-import { Zone } from "../levels/zone";
+import { Zone } from "../../zone/zone";
 import { FLOOR_MESH_NAME } from "../pieces/Floor";
+import { useZoneDisplayName } from "../../zone/useZoneDisplayName";
 
 export const AVATAR_HEIGHT = 1;
 export const AVATAR_FOREHEAD_HEIGHT = 0.05;
@@ -107,6 +108,8 @@ export const Avatar = () => {
 
   const [zone, setZone] = useState<Zone>("Base");
 
+  const zoneDisplayName = useZoneDisplayName(zone);
+
   type Modal =
     | { name: "teamCardModal" }
     | {
@@ -185,8 +188,8 @@ export const Avatar = () => {
       if (pickedFloor?.pickedMesh?.state) {
         const zone = pickedFloor.pickedMesh.state as Zone;
         switch (zone) {
-          case "Blue Team":
-          case "Red Team":
+          case "1":
+          case "2":
           case "Neutral":
           case "Base":
             setZone(zone);
@@ -209,25 +212,28 @@ export const Avatar = () => {
       if (camera && scene) {
         const pickInfo = pickClickableMesh(camera, scene);
         if (pickInfo?.pickedMesh) {
-          switch (pickInfo?.pickedMesh.name) {
+          const clickedMesh = pickInfo.pickedMesh;
+          switch (clickedMesh.name) {
             case TEAM_CARD_PANEL_WALL_NAME: {
               openModal({ name: "teamCardModal" });
               break;
             }
             case PLAYER_MESH_NAME: {
-              const playerUserId = pickInfo.pickedMesh.state;
-              // TODO: base off of where each player is located
-              socket.emit("playerConfronted", {
-                attackingUserId: userId,
-                defendingUserId: playerUserId,
-              });
+              const playerUserId = clickedMesh.state;
+              if (team) {
+                const isDefending = zone === team.id;
+                socket.emit("playerConfronted", {
+                  defendingUserId: isDefending ? userId : playerUserId,
+                  attackingUserId: isDefending ? playerUserId : userId,
+                });
+              }
               break;
             }
           }
         }
       }
     };
-    if (cameraRef.current && scene && canvas) {
+    if (cameraRef.current && scene && canvas && team) {
       canvas.addEventListener("mousedown", onMouseDown);
     }
 
@@ -236,7 +242,7 @@ export const Avatar = () => {
         canvas.removeEventListener("mousedown", onMouseDown);
       }
     };
-  }, [cameraRef, scene]);
+  }, [cameraRef, scene, team, zone]);
 
   usePlayerConfrontationResolvedListener((ev) => {
     if (ev.defendingUserId === userId || ev.attackingUserId === userId) {
@@ -441,7 +447,7 @@ export const Avatar = () => {
                   // outlineColor={PALATTE[team.color]}
                 />
                 <textBlock
-                  text={zone}
+                  text={zoneDisplayName}
                   fontSize={40}
                   color={PALATTE.light}
                   // outlineWidth={12}

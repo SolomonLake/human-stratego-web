@@ -1,6 +1,6 @@
 import { Color3, TransformNode, Vector3 } from "@babylonjs/core";
 import { BabylonNode } from "react-babylonjs";
-import { Zone } from "../levels/zone";
+import { Zone } from "../../zone/zone";
 import { Ceiling } from "./Ceiling";
 import { Floor } from "./Floor";
 import { Wall } from "./Wall";

@@ -1,5 +1,5 @@
 import { Color3, Vector3 } from "@babylonjs/core";
-import { Zone } from "../levels/zone";
+import { Zone } from "../../zone/zone";
 import { PALATTE } from "../theme/theme";
 
 export const FLOOR_MESH_NAME = "floor";
