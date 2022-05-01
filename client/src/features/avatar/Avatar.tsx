@@ -29,6 +29,7 @@ import { useAvatarTeam } from "./useAvatarTeam";
 import { Zone } from "../../zone/zone";
 import { FLOOR_MESH_NAME } from "../pieces/Floor";
 import { useZoneDisplayName } from "../../zone/useZoneDisplayName";
+import { WALL_MESH_NAME } from "../pieces/Wall";
 
 export const AVATAR_HEIGHT = 1;
 export const AVATAR_FOREHEAD_HEIGHT = 0.05;
@@ -37,13 +38,16 @@ export const AVATAR_DEPTH = AVATAR_HEIGHT * 0.15;
 
 const INITIAL_CAMERA_POSITION = { x: 0, y: 0, z: 0, yRotation: 0 };
 
+const CLICKABLE_MESH_NAMES = [TEAM_CARD_PANEL_WALL_NAME, PLAYER_MESH_NAME];
+const BLOCK_CLICK_MESH_NAMES = [WALL_MESH_NAME];
+
 const pickClickableMesh = (camera: FreeCamera, scene: Scene) => {
   const target = camera.getTarget().subtract(camera.position);
   const cameraRay = new Ray(camera.position, target, 3);
 
-  const clickableMeshNames = [TEAM_CARD_PANEL_WALL_NAME, PLAYER_MESH_NAME];
+  const meshNamesToPick = [...CLICKABLE_MESH_NAMES, ...BLOCK_CLICK_MESH_NAMES];
   return scene.pickWithRay(cameraRay, (mesh) => {
-    return clickableMeshNames.includes(mesh.name);
+    return meshNamesToPick.includes(mesh.name);
   });
 };
 
@@ -201,7 +205,12 @@ export const Avatar = () => {
       }
 
       const pickInfo = pickClickableMesh(camera, scene);
-      setClickableMesh(pickInfo?.pickedMesh);
+      const pickedMesh = pickInfo?.pickedMesh;
+      if (pickedMesh?.name && CLICKABLE_MESH_NAMES.includes(pickedMesh.name)) {
+        setClickableMesh(pickedMesh);
+      } else {
+        setClickableMesh(undefined);
+      }
     }
   });
 
@@ -280,7 +289,9 @@ export const Avatar = () => {
         keysDown={[83]}
         keysRight={[68]}
         checkCollisions
-        collisionMask={CollisionMask.Avatar}
+        collisionMask={
+          cardId === "bomb" ? CollisionMask.AvatarBomb : CollisionMask.Avatar
+        }
         ellipsoidOffset-y={AVATAR_FOREHEAD_HEIGHT}
         position={
           new Vector3(

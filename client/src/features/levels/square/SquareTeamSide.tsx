@@ -1,5 +1,6 @@
 import { Color3, Vector3 } from "@babylonjs/core";
 import { useCacheStore } from "../../cache/useCacheStore";
+import { CollisionGroup } from "../../collision/collision";
 import { Room } from "../../pieces/Room";
 import { PALATTE } from "../../theme/theme";
 import { SquareBaseLayer } from "./SquareBaseLayer";
@@ -92,7 +93,17 @@ export const SquareTeamSide = ({
         position={new Vector3(neutralCenterXPosition, roomYPosition, 0)}
         positiveZWall
         negativeZWall
+        positiveXWall={xSide === 1}
+        positiveXWallVisibility={0.5}
+        positiveXWallCollisionGroup={CollisionGroup.CollideWithAvatarBomb}
+        positiveXWallColor3={teamColor3}
+        negativeXWall={xSide === -1}
+        negativeXWallVisibility={0.5}
+        negativeXWallCollisionGroup={CollisionGroup.CollideWithAvatarBomb}
+        negativeXWallColor3={teamColor3}
+        collisionGroup={CollisionGroup.CollideWithAll}
         checkCollisions
+        invertWalls
         color3={Color3.FromHexString(PALATTE.light)}
         zone={"Neutral"}
       />

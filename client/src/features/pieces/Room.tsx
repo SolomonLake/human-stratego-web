@@ -10,9 +10,21 @@ export const Room = ({
   size,
   position,
   positiveXWall,
+  positiveXWallVisibility,
+  positiveXWallCollisionGroup,
+  positiveXWallColor3,
   negativeXWall,
+  negativeXWallVisibility,
+  negativeXWallCollisionGroup,
+  negativeXWallColor3,
   positiveZWall,
+  positiveZWallVisibility,
+  positiveZWallCollisionGroup,
+  positiveZWallColor3,
   negativeZWall,
+  negativeZWallVisibility,
+  negativeZWallCollisionGroup,
+  negativeZWallColor3,
   checkCollisions,
   collisionGroup,
   collisionMask,
@@ -25,9 +37,21 @@ export const Room = ({
   size: Vector3;
   position: Vector3;
   positiveXWall?: boolean;
+  positiveXWallVisibility?: number;
+  positiveXWallCollisionGroup?: number;
+  positiveXWallColor3?: Color3;
   negativeXWall?: boolean;
+  negativeXWallVisibility?: number;
+  negativeXWallCollisionGroup?: number;
+  negativeXWallColor3?: Color3;
   positiveZWall?: boolean;
+  positiveZWallVisibility?: number;
+  positiveZWallCollisionGroup?: number;
+  positiveZWallColor3?: Color3;
   negativeZWall?: boolean;
+  negativeZWallVisibility?: number;
+  negativeZWallCollisionGroup?: number;
+  negativeZWallColor3?: Color3;
   checkCollisions?: boolean;
   collisionGroup?: number;
   collisionMask?: number;
@@ -60,10 +84,18 @@ export const Room = ({
           height={size.y}
           width={size.z}
           checkCollisions={checkCollisions}
-          collisionGroup={collisionGroup}
+          collisionGroup={
+            typeof positiveXWallCollisionGroup === "number"
+              ? positiveXWallCollisionGroup
+              : collisionGroup
+          }
           collisionMask={collisionMask}
-          color3={color3}
-          visibility={wallVisibility}
+          color3={positiveXWallColor3 ? positiveXWallColor3 : color3}
+          visibility={
+            typeof positiveXWallVisibility === "number"
+              ? positiveXWallVisibility
+              : wallVisibility
+          }
           emissive={emissiveWalls}
         />
       )}
@@ -74,10 +106,18 @@ export const Room = ({
           height={size.y}
           width={size.z}
           checkCollisions={checkCollisions}
-          collisionGroup={collisionGroup}
+          collisionGroup={
+            typeof negativeXWallCollisionGroup === "number"
+              ? negativeXWallCollisionGroup
+              : collisionGroup
+          }
           collisionMask={collisionMask}
-          color3={color3}
-          visibility={wallVisibility}
+          color3={negativeXWallColor3 ? negativeXWallColor3 : color3}
+          visibility={
+            typeof negativeXWallVisibility === "number"
+              ? negativeXWallVisibility
+              : wallVisibility
+          }
           emissive={emissiveWalls}
         />
       )}
@@ -88,10 +128,18 @@ export const Room = ({
           height={size.y}
           width={size.x}
           checkCollisions={checkCollisions}
-          collisionGroup={collisionGroup}
+          collisionGroup={
+            typeof positiveZWallCollisionGroup === "number"
+              ? positiveZWallCollisionGroup
+              : collisionGroup
+          }
           collisionMask={collisionMask}
-          color3={color3}
-          visibility={wallVisibility}
+          color3={positiveZWallColor3 ? positiveZWallColor3 : color3}
+          visibility={
+            typeof positiveZWallVisibility === "number"
+              ? positiveZWallVisibility
+              : wallVisibility
+          }
           emissive={emissiveWalls}
         />
       )}
@@ -102,10 +150,18 @@ export const Room = ({
           height={size.y}
           width={size.x}
           checkCollisions={checkCollisions}
-          collisionGroup={collisionGroup}
+          collisionGroup={
+            typeof negativeZWallCollisionGroup === "number"
+              ? negativeZWallCollisionGroup
+              : collisionGroup
+          }
           collisionMask={collisionMask}
-          color3={color3}
-          visibility={wallVisibility}
+          color3={negativeZWallColor3 ? negativeZWallColor3 : color3}
+          visibility={
+            typeof negativeZWallVisibility === "number"
+              ? negativeZWallVisibility
+              : wallVisibility
+          }
           emissive={emissiveWalls}
         />
       )}
